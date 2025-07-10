@@ -1,0 +1,20 @@
+import { defineConfig } from 'vitest/config';
+import { resolve } from 'path';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    setupFiles: ['./src/__tests__/setup.ts'],
+    testTimeout: 10000,
+    coverage: {
+      include: ['src/**/*.ts'],
+      exclude: ['src/**/*.d.ts', 'src/__tests__/**'],
+    },
+  },
+  resolve: {
+    alias: {
+      '@backend': resolve(__dirname, './src'),
+    },
+  },
+});

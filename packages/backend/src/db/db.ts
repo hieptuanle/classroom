@@ -4,7 +4,7 @@ import config from "config";
 // Option 1: Passing a connection URI
 export const db = new Sequelize(
   config.get("database.url")
-); // Example for postgres
+);
 
 export const connection = async () => {
   try {

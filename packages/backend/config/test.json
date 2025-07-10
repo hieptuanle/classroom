@@ -3,7 +3,7 @@
     "port": 9001
   },
   "database": {
-    "url": "postgres://postgres:postgres@localhost:5432/classroom"
+    "url": "postgres://postgres:postgres@localhost:5433/classroom_test"
   },
   "key": {
     "privateKey": "37LvDSm4XvjYOh9Y",

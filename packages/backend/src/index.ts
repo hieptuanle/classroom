@@ -3,7 +3,6 @@ import express from "express";
 import bodyParser from "body-parser";
 // import mongoose from'mongoose';
 import morgan from "morgan";
-import jwt from "jsonwebtoken";
 
 // import User from './models/user';
 // import Item from './models/item';

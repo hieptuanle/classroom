@@ -7,24 +7,27 @@ const User = db.define(
 		// Model attributes are defined here
 		username: {
 			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true,
 		},
 		password: {
 			type: DataTypes.STRING,
+			allowNull: false,
 		},
 		full_name: {
 			type: DataTypes.STRING,
 		},
 		avatar: {
 			type: DataTypes.STRING,
-			// allowNull defaults to true
 		},
 		role: {
 			type: DataTypes.ENUM("admin", "teacher", "student"),
-			// allowNull defaults to true
+			defaultValue: "student",
 		},
 	},
 	{
-		// Other model options go here
+		tableName: 'Users',
+		timestamps: true,
 	}
 );
 

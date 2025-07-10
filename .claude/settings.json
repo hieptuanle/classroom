@@ -1,0 +1,33 @@
+{
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(find:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm --filter @bac-nha-zmp/backend lint)",
+      "Bash(pnpm --filter @bac-nha-zmp/backend lint:fix)",
+      "Bash(pnpm --filter bac-nha-zmp typecheck)",
+      "Bash(pnpm test:*)",
+      "mcp__ide__getDiagnostics",
+      "mcp__puppeteer__puppeteer_navigate",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "mcp__puppeteer__puppeteer_click",
+      "mcp__puppeteer__puppeteer_evaluate"
+    ],
+    "deny": []
+  }
+}

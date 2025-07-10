@@ -5,7 +5,7 @@ import { sendSuccess } from "@backend/helpers/response.js";
 
 const routes = express.Router();
 
-routes.get("/", (req, res) => {
+routes.get("/", (_req, res) => {
   sendSuccess(res, { message: "Hello World auth" });
 });
 

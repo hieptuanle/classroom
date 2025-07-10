@@ -11,11 +11,11 @@ routes.use(setHeadersForCORS);
 routes.use("/auth", auth);
 // routes.use('/users', users);
 
-routes.get("/", (req, res) => {
+routes.get("/", (_req, res) => {
   res.status(200).json({ message: "Hello World" });
 });
 
-routes.use(function (req, res) {
+routes.use(function (_req, res) {
   res.status(404).json({ message: "Not Found" });
 });
 

@@ -1,4 +1,4 @@
-import { getPaginationOptions, setPaginationHeaders } from '@backend/helpers/pagination';
+import { getPaginationOptions } from '@backend/helpers/pagination';
 import { getSortingOptions } from '@backend/helpers/sorting';
 import { Request } from 'express';
 
