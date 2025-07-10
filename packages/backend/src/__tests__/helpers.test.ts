@@ -126,9 +126,12 @@ describe('Request Helpers', () => {
     const options = getRequestOptions(mockRequest);
     
     expect(options).toHaveProperty('page');
-    expect(options).toHaveProperty('pageSize');
+    expect(options).toHaveProperty('limit'); // The helper returns 'limit', not 'pageSize'
     expect(options).toHaveProperty('sort');
-    expect(options).toHaveProperty('order');
+    // Note: The sorting helper doesn't return 'order', only 'sort'
+    expect(options.page).toBe(2);
+    expect(options.limit).toBe(20);
+    expect(options.sort).toBe('name');
   });
 
   test('getFilteringOptions should return filtered query parameters', () => {

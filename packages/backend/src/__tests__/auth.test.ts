@@ -19,7 +19,6 @@ import {
   sendSuccess,
   sendCreated,
   sendBadRequest,
-  sendInternalServerError,
   sendUnauthorized,
 } from '../helpers/response';
 

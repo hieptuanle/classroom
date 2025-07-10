@@ -7,6 +7,12 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./src/__tests__/setup.ts'],
     testTimeout: 10000,
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
+    },
     coverage: {
       include: ['src/**/*.ts'],
       exclude: ['src/**/*.d.ts', 'src/__tests__/**'],

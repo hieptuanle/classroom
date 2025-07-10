@@ -2,7 +2,6 @@ import request from 'supertest';
 import express from 'express';
 import bodyParser from 'body-parser';
 import routes from '../routes/index';
-import authRoutes from '../routes/auth/index';
 import { setHeadersForCORS } from '../helpers/response';
 import User from '../models/User';
 

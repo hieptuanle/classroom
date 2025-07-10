@@ -29,5 +29,6 @@
       "mcp__puppeteer__puppeteer_evaluate"
     ],
     "deny": []
-  }
+  },
+  "includeCoAuthoredBy": false
 }

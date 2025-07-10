@@ -19,9 +19,12 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use("/api/v1/", routes);
 
-const portConfig = config.get("server.port");
+if (!process.env.NODE_ENV) {
+  console.log("NODE_ENV is not set, setting to development");
+  process.env.NODE_ENV = "development";
+}
 
-const port = portConfig || 4000;
+const port = config.get("server.port") || 4000;
 app.listen(port);
 console.log("Node + Express REST API skeleton server started on port: " + port);
 
