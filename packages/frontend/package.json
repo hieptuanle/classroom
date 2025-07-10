@@ -1,0 +1,12 @@
+{
+  "name": "@classroom/frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "vite": "^6.2.0"
+  }
+}

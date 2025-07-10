@@ -1,0 +1,16 @@
+{
+  "server": {
+    "port": 3232
+  },
+  "database": {
+    "url": "postgres://postgres:postgres@localhost:5432/classroom"
+  },
+  "key": {
+    "privateKey": "37LvDSm4XvjYOh9Y",
+    "tokenExpireInSeconds": 1440
+  },
+  "pagination": {
+    "defaultPage": 1,
+    "defaultLimit": 10
+  }
+}
