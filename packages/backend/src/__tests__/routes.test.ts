@@ -16,10 +16,10 @@ function createTestApp() {
   return app;
 }
 
-describe("main Routes", () => {
+describe("main routes", () => {
   const app = createTestApp();
 
-  it("gET /api/v1/ should return hello world message", async () => {
+  it("request GET to /api/v1/ should return hello world message", async () => {
     const response = await request(app)
       .get("/api/v1/")
       .expect(200);
@@ -29,7 +29,7 @@ describe("main Routes", () => {
     });
   });
 
-  it("gET /api/v1/nonexistent should return 404", async () => {
+  it("request GET to /api/v1/nonexistent should return 404", async () => {
     const response = await request(app)
       .get("/api/v1/nonexistent")
       .expect(404);
@@ -39,7 +39,7 @@ describe("main Routes", () => {
     });
   });
 
-  it("should set CORS headers", async () => {
+  it("request GET to /api/v1/ should set CORS headers", async () => {
     const response = await request(app)
       .get("/api/v1/")
       .expect(200);
@@ -51,10 +51,10 @@ describe("main Routes", () => {
   });
 });
 
-describe("auth Routes", () => {
+describe("auth routes", () => {
   const app = createTestApp();
 
-  it("gET /api/v1/auth/ should return hello world auth message", async () => {
+  it("request GET to /api/v1/auth/ should return hello world auth message", async () => {
     const response = await request(app)
       .get("/api/v1/auth/")
       .expect(200);
@@ -64,7 +64,7 @@ describe("auth Routes", () => {
     });
   });
 
-  it("pOST /api/v1/auth/register should create a new user", async () => {
+  it("request POST to /api/v1/auth/register should create a new user", async () => {
     const userData = {
       email: "testuser@example.com",
       username: "testuser",
@@ -95,7 +95,7 @@ describe("auth Routes", () => {
     expect(user).toBeTruthy();
   });
 
-  it("pOST /api/v1/auth/register should return error for duplicate username", async () => {
+  it("request POST to /api/v1/auth/register should return error for duplicate username", async () => {
     const userData = {
       email: "duplicate@example.com",
       username: "duplicateuser",
@@ -117,7 +117,7 @@ describe("auth Routes", () => {
     });
   });
 
-  it("pOST /api/v1/auth/login should authenticate user with correct credentials", async () => {
+  it("request POST to /api/v1/auth/login should authenticate user with correct credentials", async () => {
     const userData = {
       email: "login@example.com",
       username: "loginuser",
@@ -149,7 +149,7 @@ describe("auth Routes", () => {
     });
   });
 
-  it("pOST /api/v1/auth/login should return error for invalid credentials", async () => {
+  it("request POST to /api/v1/auth/login should return error for invalid credentials", async () => {
     const userData = {
       email: "invalid@example.com",
       username: "invaliduser",
@@ -175,7 +175,7 @@ describe("auth Routes", () => {
     });
   });
 
-  it("pOST /api/v1/auth/login should return error for non-existent user", async () => {
+  it("request POST to /api/v1/auth/login should return error for non-existent user", async () => {
     const response = await request(app)
       .post("/api/v1/auth/login")
       .send({
