@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',     // Căn giữa ngang
+    alignItems: 'center',     // Căn giữa n    gang
     justifyContent: 'center', // Căn giữa dọc
     padding: 20,
   },
