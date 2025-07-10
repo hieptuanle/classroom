@@ -1,184 +1,192 @@
-import request from 'supertest';
-import express from 'express';
-import bodyParser from 'body-parser';
-import routes from '../routes/index';
-import { setHeadersForCORS } from '../helpers/response';
-import User from '../models/User';
+import bodyParser from "body-parser";
+import express from "express";
+import request from "supertest";
+
+import { setHeadersForCORS } from "../helpers/response";
+import User from "../models/user";
+import routes from "../routes/index";
 
 // Create test app
-const createTestApp = () => {
+function createTestApp() {
   const app = express();
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(setHeadersForCORS);
-  app.use('/api/v1', routes);
+  app.use("/api/v1", routes);
   return app;
-};
+}
 
-describe('Main Routes', () => {
+describe("main Routes", () => {
   const app = createTestApp();
 
-  test('GET /api/v1/ should return hello world message', async () => {
+  it("gET /api/v1/ should return hello world message", async () => {
     const response = await request(app)
-      .get('/api/v1/')
+      .get("/api/v1/")
       .expect(200);
 
     expect(response.body).toEqual({
-      message: 'Hello World',
+      message: "Hello World",
     });
   });
 
-  test('GET /api/v1/nonexistent should return 404', async () => {
+  it("gET /api/v1/nonexistent should return 404", async () => {
     const response = await request(app)
-      .get('/api/v1/nonexistent')
+      .get("/api/v1/nonexistent")
       .expect(404);
 
     expect(response.body).toEqual({
-      message: 'Not Found',
+      message: "Not Found",
     });
   });
 
-  test('should set CORS headers', async () => {
+  it("should set CORS headers", async () => {
     const response = await request(app)
-      .get('/api/v1/')
+      .get("/api/v1/")
       .expect(200);
 
-    expect(response.headers['access-control-allow-origin']).toBe('*');
-    expect(response.headers['access-control-allow-headers']).toBe(
-      'Origin, X-Requested-With, X-Access-Token, Content-Type, Accept'
+    expect(response.headers["access-control-allow-origin"]).toBe("*");
+    expect(response.headers["access-control-allow-headers"]).toBe(
+      "Origin, X-Requested-With, X-Access-Token, Content-Type, Accept",
     );
   });
 });
 
-describe('Auth Routes', () => {
+describe("auth Routes", () => {
   const app = createTestApp();
 
-  test('GET /api/v1/auth/ should return hello world auth message', async () => {
+  it("gET /api/v1/auth/ should return hello world auth message", async () => {
     const response = await request(app)
-      .get('/api/v1/auth/')
+      .get("/api/v1/auth/")
       .expect(200);
 
     expect(response.body).toEqual({
-      message: 'Hello World auth',
+      message: "Hello World auth",
     });
   });
 
-  test('POST /api/v1/auth/register should create a new user', async () => {
+  it("pOST /api/v1/auth/register should create a new user", async () => {
     const userData = {
-      username: 'testuser',
-      password: 'password123',
-      full_name: 'Test User',
-      avatar: 'https://example.com/avatar.jpg',
+      email: "testuser@example.com",
+      username: "testuser",
+      password: "password123",
+      full_name: "Test User",
     };
 
     const response = await request(app)
-      .post('/api/v1/auth/register')
+      .post("/api/v1/auth/register")
       .send(userData)
-      .expect(201);
+      .expect(200);
 
     expect(response.body).toMatchObject({
-      success: true,
-      message: 'User created.',
+      message: "User registered successfully",
       data: {
         user: expect.objectContaining({
           username: userData.username,
+          email: userData.email,
           full_name: userData.full_name,
-          role: 'student',
+          role: "student",
         }),
+        token: expect.any(String),
       },
     });
 
     // Verify user was created in database
-    const user = await User.findOne({ where: { username: 'testuser' } });
+    const user = await User.findOne({ where: { username: "testuser" } });
     expect(user).toBeTruthy();
   });
 
-  test('POST /api/v1/auth/register should return error for duplicate username', async () => {
+  it("pOST /api/v1/auth/register should return error for duplicate username", async () => {
     const userData = {
-      username: 'duplicateuser',
-      password: 'password123',
-      full_name: 'Duplicate User',
+      email: "duplicate@example.com",
+      username: "duplicateuser",
+      password: "password123",
+      full_name: "Duplicate User",
     };
 
     // Create user first
-    await User.create({ ...userData, role: 'student' });
+    await User.create({ ...userData, role: "student" });
 
     const response = await request(app)
-      .post('/api/v1/auth/register')
+      .post("/api/v1/auth/register")
       .send(userData)
       .expect(400);
 
     expect(response.body).toMatchObject({
       success: false,
-      message: 'User already exists.',
+      message: "User with this email or username already exists",
     });
   });
 
-  test('POST /api/v1/auth/login should authenticate user with correct credentials', async () => {
+  it("pOST /api/v1/auth/login should authenticate user with correct credentials", async () => {
     const userData = {
-      username: 'loginuser',
-      password: 'password123',
-      full_name: 'Login User',
-      role: 'student' as const,
+      email: "login@example.com",
+      username: "loginuser",
+      password: "password123",
+      full_name: "Login User",
+      role: "student" as const,
     };
 
     // Create user
     await User.create(userData);
 
     const response = await request(app)
-      .post('/api/v1/auth/login')
+      .post("/api/v1/auth/login")
       .send({
-        username: 'loginuser',
-        password: 'password123',
+        email: "login@example.com",
+        password: "password123",
       })
       .expect(200);
 
     expect(response.body).toMatchObject({
-      success: true,
-      message: 'Token created.',
+      message: "Login successful",
       data: {
+        user: expect.objectContaining({
+          email: userData.email,
+          username: userData.username,
+        }),
         token: expect.any(String),
       },
     });
   });
 
-  test('POST /api/v1/auth/login should return error for invalid credentials', async () => {
+  it("pOST /api/v1/auth/login should return error for invalid credentials", async () => {
     const userData = {
-      username: 'invaliduser',
-      password: 'correctpass',
-      full_name: 'Invalid User',
-      role: 'student' as const,
+      email: "invalid@example.com",
+      username: "invaliduser",
+      password: "correctpass",
+      full_name: "Invalid User",
+      role: "student" as const,
     };
 
     // Create user
     await User.create(userData);
 
     const response = await request(app)
-      .post('/api/v1/auth/login')
+      .post("/api/v1/auth/login")
       .send({
-        username: 'invaliduser',
-        password: 'wrongpass',
+        email: "invalid@example.com",
+        password: "wrongpass",
       })
       .expect(401);
 
     expect(response.body).toMatchObject({
       success: false,
-      message: 'Authentication failed.',
+      message: "Invalid credentials",
     });
   });
 
-  test('POST /api/v1/auth/login should return error for non-existent user', async () => {
+  it("pOST /api/v1/auth/login should return error for non-existent user", async () => {
     const response = await request(app)
-      .post('/api/v1/auth/login')
+      .post("/api/v1/auth/login")
       .send({
-        username: 'nonexistent',
-        password: 'password123',
+        email: "nonexistent@example.com",
+        password: "password123",
       })
       .expect(401);
 
     expect(response.body).toMatchObject({
       success: false,
-      message: 'Authentication failed.',
+      message: "Invalid credentials",
     });
   });
 });

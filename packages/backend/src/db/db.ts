@@ -1,5 +1,10 @@
-import { Options, Sequelize } from "sequelize";
+import type { Options } from "sequelize";
+
 import config from "config";
+import { Sequelize } from "sequelize";
+
+import { getNodeEnv } from "@backend/libs/config.js";
+import logger from "@backend/libs/logger.js";
 
 // Database configuration
 const dbConfig: Options = {
@@ -9,7 +14,7 @@ const dbConfig: Options = {
   password: config.get("database.password") || "postgres",
   database: config.get("database.name") || "classroom",
   dialect: "postgres",
-  logging: config.get("database.logging") ? console.log : false,
+  logging: getNodeEnv() === "development" ? (sql: string) => logger.debug(sql) : false,
   pool: {
     max: 5,
     min: 0,
@@ -20,18 +25,19 @@ const dbConfig: Options = {
 
 export const db = new Sequelize(dbConfig);
 
-export const connection = async () => {
+export async function connection() {
   try {
     await db.authenticate();
-    console.log("Success to connect to database");
-    console.log("✅ Successfully connected to PostgreSQL database");
+    logger.info("✅ Successfully connected to PostgreSQL database");
 
     // Sync models in development
-    if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+    if (getNodeEnv() === "development") {
       await db.sync({ alter: true });
-      console.log("✅ Database models synchronized");
+      logger.info("✅ Database models synchronized");
     }
-  } catch (err) {
-    console.error("Unable to connect to database: ", err);
   }
-};
+  catch (err) {
+    logger.error("❌ Unable to connect to database: ", err);
+    process.exit(1);
+  }
+}

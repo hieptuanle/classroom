@@ -1,13 +1,19 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import config from 'config';
-import { register, authenticate } from '../controllers/auth/index';
-import User from '../models/User';
+import type { Request, Response } from "express";
 
-import { vi } from 'vitest';
+import config from "config";
+import jwt from "jsonwebtoken";
+import { vi } from "vitest";
+
+import { login, register } from "../controllers/auth/index";
+import {
+  sendBadRequest,
+  sendSuccess,
+  sendUnauthorized,
+} from "../helpers/response";
+import User from "../models/user";
 
 // Mock the response helpers
-vi.mock('../helpers/response', () => ({
+vi.mock("../helpers/response", () => ({
   sendSuccess: vi.fn(),
   sendCreated: vi.fn(),
   sendBadRequest: vi.fn(),
@@ -15,14 +21,7 @@ vi.mock('../helpers/response', () => ({
   sendUnauthorized: vi.fn(),
 }));
 
-import {
-  sendSuccess,
-  sendCreated,
-  sendBadRequest,
-  sendUnauthorized,
-} from '../helpers/response';
-
-describe('Auth Controller', () => {
+describe("auth Controller", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
 
@@ -33,18 +32,18 @@ describe('Auth Controller', () => {
       json: vi.fn(),
       send: vi.fn(),
     };
-    
+
     // Clear all mocks
     vi.clearAllMocks();
   });
 
-  describe('register', () => {
-    test('should register a new user successfully', async () => {
+  describe("register", () => {
+    it("should register a new user successfully", async () => {
       const userData = {
-        username: 'newuser',
-        password: 'password123',
-        full_name: 'New User',
-        avatar: 'https://example.com/avatar.jpg',
+        email: "newuser@example.com",
+        username: "newuser",
+        password: "password123",
+        full_name: "New User",
       };
 
       mockRequest.body = userData;
@@ -52,29 +51,32 @@ describe('Auth Controller', () => {
       await register(mockRequest as Request, mockResponse as Response);
 
       // Verify user was created
-      const user = await User.findOne({ where: { username: 'newuser' } });
+      const user = await User.findOne({ where: { username: "newuser" } });
       expect(user).toBeTruthy();
       expect(user?.dataValues.username).toBe(userData.username);
-      expect(user?.dataValues.role).toBe('student');
+      expect(user?.dataValues.email).toBe(userData.email);
+      expect(user?.dataValues.role).toBe("student");
 
       // Verify response
-      expect(sendCreated).toHaveBeenCalledWith(mockResponse, {
-        success: true,
-        message: 'User created.',
-        data: { user: expect.any(Object) },
+      expect(sendSuccess).toHaveBeenCalledWith(mockResponse, {
+        message: "User registered successfully",
+        data: {
+          user: expect.any(Object),
+          token: expect.any(String),
+        },
       });
     });
 
-    test('should return error when user already exists', async () => {
+    it("should return error when user already exists", async () => {
       const userData = {
-        username: 'existinguser',
-        password: 'password123',
-        full_name: 'Existing User',
-        avatar: 'https://example.com/avatar.jpg',
+        email: "existing@example.com",
+        username: "existinguser",
+        password: "password123",
+        full_name: "Existing User",
       };
 
       // Create user first
-      await User.create({ ...userData, role: 'student' });
+      await User.create({ ...userData, role: "student" });
 
       mockRequest.body = userData;
 
@@ -82,78 +84,82 @@ describe('Auth Controller', () => {
 
       expect(sendBadRequest).toHaveBeenCalledWith(
         mockResponse,
-        'User already exists.'
+        "User with this email or username already exists",
       );
     });
   });
 
-  describe('authenticate', () => {
-    test('should authenticate user with correct credentials', async () => {
+  describe("login", () => {
+    it("should authenticate user with correct credentials", async () => {
       const userData = {
-        username: 'authuser',
-        password: 'password123',
-        full_name: 'Auth User',
-        role: 'student' as const,
+        email: "auth@example.com",
+        username: "authuser",
+        password: "password123",
+        full_name: "Auth User",
+        role: "student" as const,
       };
 
       // Create user
       await User.create(userData);
 
       mockRequest.body = {
-        username: 'authuser',
-        password: 'password123',
+        email: "auth@example.com",
+        password: "password123",
       };
 
-      await authenticate(mockRequest as Request, mockResponse as Response);
+      await login(mockRequest as Request, mockResponse as Response);
 
       expect(sendSuccess).toHaveBeenCalledWith(mockResponse, {
-        success: true,
-        message: 'Token created.',
-        data: { token: expect.any(String) },
+        message: "Login successful",
+        data: {
+          user: expect.any(Object),
+          token: expect.any(String),
+        },
       });
 
       // Verify token is valid
       const call = (sendSuccess as any).mock.calls[0];
       const token = call[1].data.token;
-      const decoded = jwt.verify(token, config.get('key.privateKey') as string);
-      expect(decoded).toHaveProperty('username', 'authuser');
+      const decoded = jwt.verify(token, config.get("key.privateKey") as string);
+      expect(decoded).toHaveProperty("email", "auth@example.com");
     });
 
-    test('should return error for non-existent user', async () => {
+    it("should return error for non-existent user", async () => {
       mockRequest.body = {
-        username: 'nonexistent',
-        password: 'password123',
+        email: "nonexistent@example.com",
+        password: "password123",
       };
 
-      await authenticate(mockRequest as Request, mockResponse as Response);
+      await login(mockRequest as Request, mockResponse as Response);
 
       expect(sendUnauthorized).toHaveBeenCalledWith(
         mockResponse,
-        'Authentication failed.'
+        "Invalid credentials",
       );
     });
 
-    test('should return error for wrong password', async () => {
+    it("should return error for wrong password", async () => {
       const userData = {
-        username: 'wrongpass',
-        password: 'correctpass',
-        full_name: 'Wrong Pass User',
-        role: 'student' as const,
+        email: "wrongpass@example.com",
+        username: "wrongpass",
+        password: "correctpass",
+        full_name: "Wrong Pass User",
+        role: "student" as const,
       };
 
       // Create user
       await User.create(userData);
 
       mockRequest.body = {
-        username: 'wrongpass',
-        password: 'wrongpassword',
+        email: "wrongpass@example.com",
+        password: "wrongpassword",
       };
 
-      await authenticate(mockRequest as Request, mockResponse as Response);
+      await login(mockRequest as Request, mockResponse as Response);
 
       expect(sendUnauthorized).toHaveBeenCalledWith(
         mockResponse,
-        'Authentication failed.'
+        "Invalid credentials",
       );
     });
   });

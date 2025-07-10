@@ -1,7 +1,9 @@
-import { Request } from 'express';
+import type { Request } from "express";
 
 export const getSortingOptions = function (req: Request) {
-  return (req.query.sort !== undefined) ? {
-    sort: (req.query.sort as string).replace(',', ' ')
-  } : {};
+  return (req.query.sort !== undefined)
+    ? {
+        sort: (req.query.sort as string).replace(",", " "),
+      }
+    : {};
 };

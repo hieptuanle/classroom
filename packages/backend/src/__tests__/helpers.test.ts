@@ -1,18 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
-import { vi } from 'vitest';
-import {
-  sendSuccess,
-  sendCreated,
-  sendBadRequest,
-  sendUnauthorized,
-  sendForbidden,
-  sendNotFound,
-  sendInternalServerError,
-  setHeadersForCORS,
-} from '../helpers/response.js';
-import { getRequestOptions, getFilteringOptions } from '../helpers/request.js';
+import type { NextFunction, Request, Response } from "express";
 
-describe('Response Helpers', () => {
+import { vi } from "vitest";
+
+import { getFilteringOptions, getRequestOptions } from "../helpers/request.js";
+import {
+  sendBadRequest,
+  sendCreated,
+  sendForbidden,
+  sendInternalServerError,
+  sendNotFound,
+  sendSuccess,
+  sendUnauthorized,
+  setHeadersForCORS,
+} from "../helpers/response.js";
+
+describe("response Helpers", () => {
   let mockResponse: Partial<Response>;
 
   beforeEach(() => {
@@ -23,29 +25,29 @@ describe('Response Helpers', () => {
     };
   });
 
-  test('sendSuccess should send 200 status with data', () => {
-    const testData = { message: 'Success' };
-    
+  it("sendSuccess should send 200 status with data", () => {
+    const testData = { message: "Success" };
+
     sendSuccess(mockResponse as Response, testData);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.send).toHaveBeenCalledWith(testData);
   });
 
-  test('sendCreated should send 201 status with data', () => {
-    const testData = { message: 'Created' };
-    
+  it("sendCreated should send 201 status with data", () => {
+    const testData = { message: "Created" };
+
     sendCreated(mockResponse as Response, testData);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.send).toHaveBeenCalledWith(testData);
   });
 
-  test('sendBadRequest should send 400 status with error message', () => {
-    const message = 'Bad request';
-    
+  it("sendBadRequest should send 400 status with error message", () => {
+    const message = "Bad request";
+
     sendBadRequest(mockResponse as Response, message);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(400);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
@@ -53,11 +55,11 @@ describe('Response Helpers', () => {
     });
   });
 
-  test('sendUnauthorized should send 401 status with error message', () => {
-    const message = 'Unauthorized';
-    
+  it("sendUnauthorized should send 401 status with error message", () => {
+    const message = "Unauthorized";
+
     sendUnauthorized(mockResponse as Response, message);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(401);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
@@ -65,31 +67,31 @@ describe('Response Helpers', () => {
     });
   });
 
-  test('sendForbidden should send 403 status with default message', () => {
+  it("sendForbidden should send 403 status with default message", () => {
     sendForbidden(mockResponse as Response);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
-      message: 'You do not have rights to access this resource.',
+      message: "You do not have rights to access this resource.",
     });
   });
 
-  test('sendNotFound should send 404 status with default message', () => {
+  it("sendNotFound should send 404 status with default message", () => {
     sendNotFound(mockResponse as Response);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(404);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
-      message: 'Resource not found.',
+      message: "Resource not found.",
     });
   });
 
-  test('sendInternalServerError should send 500 status with error message', () => {
-    const message = 'Internal server error';
-    
+  it("sendInternalServerError should send 500 status with error message", () => {
+    const message = "Internal server error";
+
     sendInternalServerError(mockResponse as Response, message);
-    
+
     expect(mockResponse.status).toHaveBeenCalledWith(500);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
@@ -97,76 +99,76 @@ describe('Response Helpers', () => {
     });
   });
 
-  test('setHeadersForCORS should set CORS headers', () => {
+  it("setHeadersForCORS should set CORS headers", () => {
     const mockRequest = {} as Request;
     const mockNext = vi.fn() as NextFunction;
-    
+
     setHeadersForCORS(mockRequest, mockResponse as Response, mockNext);
-    
-    expect(mockResponse.header).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
+
+    expect(mockResponse.header).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
     expect(mockResponse.header).toHaveBeenCalledWith(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, X-Access-Token, Content-Type, Accept'
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, X-Access-Token, Content-Type, Accept",
     );
     expect(mockNext).toHaveBeenCalled();
   });
 });
 
-describe('Request Helpers', () => {
-  test('getRequestOptions should return combined pagination and sorting options', () => {
+describe("request Helpers", () => {
+  it("getRequestOptions should return combined pagination and sorting options", () => {
     const mockRequest = {
       query: {
-        page: '2',
-        pageSize: '20',
-        sort: 'name',
-        order: 'desc',
+        page: "2",
+        pageSize: "20",
+        sort: "name",
+        order: "desc",
       },
-    } as unknown as Request<any, any, any, { page: string, pageSize: string, search: string, sort: string, order: string }>;
+    } as unknown as Request<any, any, any, { page: string; pageSize: string; search: string; sort: string; order: string }>;
 
     const options = getRequestOptions(mockRequest);
-    
-    expect(options).toHaveProperty('page');
-    expect(options).toHaveProperty('limit'); // The helper returns 'limit', not 'pageSize'
-    expect(options).toHaveProperty('sort');
+
+    expect(options).toHaveProperty("page");
+    expect(options).toHaveProperty("limit"); // The helper returns 'limit', not 'pageSize'
+    expect(options).toHaveProperty("sort");
     // Note: The sorting helper doesn't return 'order', only 'sort'
     expect(options.page).toBe(2);
     expect(options.limit).toBe(20);
-    expect(options.sort).toBe('name');
+    expect(options.sort).toBe("name");
   });
 
-  test('getFilteringOptions should return filtered query parameters', () => {
+  it("getFilteringOptions should return filtered query parameters", () => {
     const mockRequest = {
       query: {
-        name: 'John',
-        age: '25',
-        city: 'New York',
-        unwanted: 'should not appear',
+        name: "John",
+        age: "25",
+        city: "New York",
+        unwanted: "should not appear",
       },
     };
 
-    const parameters = ['name', 'age', 'city'];
+    const parameters = ["name", "age", "city"];
     const options = getFilteringOptions(mockRequest, parameters);
-    
+
     expect(options).toEqual({
-      name: 'John',
-      age: '25',
-      city: 'New York',
+      name: "John",
+      age: "25",
+      city: "New York",
     });
-    expect(options).not.toHaveProperty('unwanted');
+    expect(options).not.toHaveProperty("unwanted");
   });
 
-  test('getFilteringOptions should handle missing parameters', () => {
+  it("getFilteringOptions should handle missing parameters", () => {
     const mockRequest = {
       query: {
-        name: 'John',
+        name: "John",
       },
     };
 
-    const parameters = ['name', 'age', 'city'];
+    const parameters = ["name", "age", "city"];
     const options = getFilteringOptions(mockRequest, parameters);
-    
+
     expect(options).toEqual({
-      name: 'John',
+      name: "John",
     });
   });
 });

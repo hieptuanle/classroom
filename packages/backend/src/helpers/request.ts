@@ -1,8 +1,9 @@
-import { getPaginationOptions } from '@backend/helpers/pagination';
-import { getSortingOptions } from '@backend/helpers/sorting';
-import { Request } from 'express';
+import type { Request } from "express";
 
-export const getRequestOptions = function (req: Request<any, any, any, { page: string, pageSize: string, search: string, sort: string, order: string }>) {
+import { getPaginationOptions } from "@backend/helpers/pagination";
+import { getSortingOptions } from "@backend/helpers/sorting";
+
+export const getRequestOptions = function (req: Request<any, any, any, { page: string; pageSize: string; search: string; sort: string; order: string }>) {
   const paginationOptions = getPaginationOptions(req);
   const sortOptions = getSortingOptions(req);
 
@@ -10,9 +11,9 @@ export const getRequestOptions = function (req: Request<any, any, any, { page: s
 };
 
 export const getFilteringOptions = function (req: any, parameters: string[]) {
-  let options: Record<string, string> = {};
+  const options: Record<string, string> = {};
 
-  parameters.forEach(function (param: string) {
+  parameters.forEach((param: string) => {
     if (req.query[param] !== undefined) {
       options[param] = req.query[param];
     }
