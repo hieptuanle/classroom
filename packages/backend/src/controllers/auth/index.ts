@@ -36,7 +36,8 @@ export const register = async (req: Request<any, any, { username: string, passwo
   }
 };
 
-export const authenticate = async (req, res) => {
+
+export const authenticate = async (req: Request<any, any, { username: string, password: string }, any>, res: Response) => {
   User.findOne({ username: req.body.username }).exec(function (err, user) {
     if (err) throw err;
 
@@ -55,7 +56,7 @@ export const authenticate = async (req, res) => {
             expiresIn: tokenExpireInSeconds,
           });
 
-          sendSuccess({
+          sendSuccess(res, {
             success: true,
             message: "Token created.",
             data: { token: token },
