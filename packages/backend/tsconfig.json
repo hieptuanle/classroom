@@ -3,9 +3,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@backend/*": [
-        "./src/*"
-      ]
+      "@backend/*": ["src/*"],
+      "@backend-db/*": ["db/*"],
+      "@backend-helpers/*": ["src/helpers/*"],
+      "@backend-libs/*": ["src/libs/*"],
+      "@backend-routes/*": ["src/routes/*"]
     },
     "types": ["vitest/globals"],
     "outDir": "./dist",

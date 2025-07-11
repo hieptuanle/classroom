@@ -1,0 +1,49 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: classroom-api
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: "172.17.0.2"
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_DB}
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      db:
+        condition: service_started
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - app-network
+  db:
+    image: postgres:17-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin: 
+    image: dpage/pgadmin4
+    ports:
+      - 8081:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - db
+    networks:
+      - app-network
+volumes:
+  postgres_data:
+networks:
+  app-network:
+    driver: bridge

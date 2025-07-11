@@ -1,6 +1,6 @@
 {
   "server": {
-    "port": 3232
+    "port": 4000
   },
   "database": {
     "host": "localhost",

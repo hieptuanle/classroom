@@ -1,8 +1,17 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { users } from "@backend-db/schema";
+import {
+  comparePassword,
+  createUser,
+  findUserByEmail,
+  findUserById,
+  findUserByUsername,
+  updateUserLastLogin,
+} from "@backend-db/utils";
 import config from "config";
+import { eq, or } from "drizzle-orm";
 import jwt from "jsonwebtoken";
-import { Op } from "sequelize";
 
 import {
   sendBadRequest,
@@ -10,31 +19,26 @@ import {
   sendNotFound,
   sendSuccess,
   sendUnauthorized,
-} from "@backend/helpers/response.js";
-import logger from "@backend/libs/logger.js";
-import User from "@backend/models/user.js";
+} from "@backend/helpers/response";
+import { db } from "@backend/index";
+import logger from "@backend/libs/logger";
 
 const privateKey = config.get("key.privateKey") as string;
 const tokenExpireInSeconds = config.get("key.tokenExpireInSeconds") as number;
 
 // Register new user
-export async function register(req: Request<any, any, { email: string; username: string; password: string; full_name: string; role?: "admin" | "teacher" | "student" }, any>, res: Response) {
+export async function register(req: Request<any, any, { email: string; username: string; password: string; fullName: string; role?: "admin" | "teacher" | "student" }, any>, res: Response) {
   try {
-    const { email, username, password, full_name, role = "student" } = req.body;
+    const { email, username, password, fullName, role = "student" } = req.body;
 
     // Validate required fields
-    if (!email || !username || !password || !full_name) {
+    if (!email || !username || !password || !fullName) {
       return sendBadRequest(res, "All fields are required");
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({
-      where: {
-        [Op.or]: [{ email }, { username }],
-      },
-    });
-
-    if (existingUser) {
+    const existingUser = await db.select().from(users).where(or(eq(users.email, email), eq(users.username, username)));
+    if (existingUser.length > 0) {
       return sendBadRequest(
         res,
         "User with this email or username already exists",
@@ -42,20 +46,20 @@ export async function register(req: Request<any, any, { email: string; username:
     }
 
     // Create new user
-    const newUser = await User.create({
+    const newUser = await createUser({
       email,
       username,
       password,
-      full_name,
+      fullName,
       role,
     });
 
     // Generate token
     const token = jwt.sign(
       {
-        id: newUser.dataValues.id,
-        email: newUser.dataValues.email,
-        role: newUser.dataValues.role,
+        id: newUser.id,
+        email: newUser.email,
+        role: newUser.role,
       },
       privateKey,
       { expiresIn: tokenExpireInSeconds },
@@ -64,7 +68,17 @@ export async function register(req: Request<any, any, { email: string; username:
     return sendSuccess(res, {
       message: "User registered successfully",
       data: {
-        user: (newUser as any).getPublicProfile(),
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          username: newUser.username,
+          fullName: newUser.fullName,
+          avatarUrl: newUser.avatarUrl,
+          role: newUser.role,
+          profile: newUser.profile,
+          createdAt: newUser.createdAt,
+          updatedAt: newUser.updatedAt,
+        },
         token,
       },
     });
@@ -86,34 +100,32 @@ export async function login(req: Request<any, any, { email: string; password: st
     }
 
     // Find user by email
-    const user = await User.findOne({
-      where: { email },
-    });
+    const user = await findUserByEmail(email);
 
     if (!user) {
       return sendUnauthorized(res, "Invalid credentials");
     }
 
     // Check if user is active
-    if (!user.dataValues.is_active) {
+    if (!user.isActive) {
       return sendUnauthorized(res, "Account is deactivated");
     }
 
     // Verify password
-    const isPasswordValid = await (user as any).comparePassword(password);
+    const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
       return sendUnauthorized(res, "Invalid credentials");
     }
 
     // Update last login
-    await user.update({ last_login: new Date() });
+    await updateUserLastLogin(user.id);
 
     // Generate token
     const token = jwt.sign(
       {
-        id: user.dataValues.id,
-        email: user.dataValues.email,
-        role: user.dataValues.role,
+        id: user.id,
+        email: user.email,
+        role: user.role,
       },
       privateKey,
       { expiresIn: tokenExpireInSeconds },
@@ -122,7 +134,17 @@ export async function login(req: Request<any, any, { email: string; password: st
     return sendSuccess(res, {
       message: "Login successful",
       data: {
-        user: (user as any).getPublicProfile(),
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          avatarUrl: user.avatarUrl,
+          role: user.role,
+          profile: user.profile,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
         token,
       },
     });
@@ -149,14 +171,24 @@ export async function logout(_req: Request, res: Response) {
 // Get current user profile
 export async function getProfile(req: Request, res: Response) {
   try {
-    const user = await User.findByPk((req as any).currentUser.id);
+    const user = await findUserById((req as any).currentUser.id);
     if (!user) {
       return sendNotFound(res, "User not found");
     }
 
     return sendSuccess(res, {
       data: {
-        user: (user as any).getPublicProfile(),
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          avatarUrl: user.avatarUrl,
+          role: user.role,
+          profile: user.profile,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
       },
     });
   }
@@ -167,10 +199,10 @@ export async function getProfile(req: Request, res: Response) {
 }
 
 // Update user profile
-export async function updateProfile(req: Request<any, any, { full_name?: string; avatar_url?: string; profile?: any }, any>, res: Response) {
+export async function updateProfile(req: Request<any, any, { fullName?: string; avatar_url?: string; profile?: any }, any>, res: Response) {
   try {
-    const { full_name, avatar_url, profile } = req.body;
-    const user = await User.findByPk((req as any).currentUser.id);
+    const { fullName, avatar_url, profile } = req.body;
+    const user = await findUserById((req as any).currentUser.id);
 
     if (!user) {
       return sendNotFound(res, "User not found");
@@ -178,19 +210,32 @@ export async function updateProfile(req: Request<any, any, { full_name?: string;
 
     // Update allowed fields
     const updateData: any = {};
-    if (full_name)
-      updateData.full_name = full_name;
+    if (fullName)
+      updateData.fullName = fullName;
     if (avatar_url)
-      updateData.avatar_url = avatar_url;
+      updateData.avatarUrl = avatar_url;
     if (profile)
-      updateData.profile = { ...user.dataValues.profile, ...profile };
+      updateData.profile = { ...(user.profile as any), ...profile };
 
-    await user.update(updateData);
+    const [updatedUser] = await db.update(users)
+      .set(updateData)
+      .where(eq(users.id, user.id))
+      .returning();
 
     return sendSuccess(res, {
       message: "Profile updated successfully",
       data: {
-        user: (user as any).getPublicProfile(),
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          username: updatedUser.username,
+          fullName: updatedUser.fullName,
+          avatarUrl: updatedUser.avatarUrl,
+          role: updatedUser.role,
+          profile: updatedUser.profile,
+          createdAt: updatedUser.createdAt,
+          updatedAt: updatedUser.updatedAt,
+        },
       },
     });
   }
@@ -214,9 +259,9 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
     }
 
     const decoded = jwt.verify(token, privateKey) as any;
-    const user = await User.findByPk(decoded.id);
+    const user = await findUserById(decoded.id);
 
-    if (!user || !user.dataValues.is_active) {
+    if (!user || !user.isActive) {
       return sendUnauthorized(res, "Invalid token");
     }
 
