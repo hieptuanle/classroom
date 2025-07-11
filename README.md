@@ -1,13 +1,13 @@
 # Classroom Management System
 
-A modern classroom management system built with Express.js backend and Expo React Native frontend.
+A modern classroom management system built with Express.js backend and Expo React Native mobile.
 
 ## Project Structure
 
 This is a monorepo containing:
 
 - **Backend**: Express.js API with TypeScript, PostgreSQL, and Sequelize ORM
-- **Frontend**: Expo React Native app with TypeScript and Expo Router
+- **mobile**: Expo React Native app with TypeScript and Expo Router
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ npm install -g @expo/cli
 git clone <repository-url>
 cd classroom
 
-# Install all dependencies for both backend and frontend
+# Install all dependencies for both backend and mobile
 pnpm install
 ```
 
@@ -82,37 +82,48 @@ pnpm --filter @classroom/backend build
 # Type checking (passes with 0 errors)
 pnpm --filter @classroom/backend typecheck
 
+# Linting
+pnpm --filter @classroom/backend lint
+pnpm --filter @classroom/backend lint:fix
+
 # Testing
 pnpm --filter @classroom/backend test
 pnpm --filter @classroom/backend test:watch
 pnpm --filter @classroom/backend test:coverage
 ```
 
-### 4. Frontend Development
+### 4. Mobile Development
 
 ```bash
 # Start Expo development server
-pnpm --filter frontend start
+pnpm --filter @classroom/mobile start
 
 # Or run specific platforms
-pnpm --filter frontend android  # Android emulator
-pnpm --filter frontend ios      # iOS simulator
-pnpm --filter frontend web      # Web browser
+pnpm --filter @classroom/mobile android  # Android emulator
+pnpm --filter @classroom/mobile ios      # iOS simulator
+pnpm --filter @classroom/mobile web      # Web browser
 ```
 
-#### Frontend Commands
+#### Mobile Commands
 
 ```bash
 # Start development server
-pnpm --filter frontend start
+pnpm --filter @classroom/mobile start
 
 # Platform-specific development
-pnpm --filter frontend android
-pnpm --filter frontend ios
-pnpm --filter frontend web
+pnpm --filter @classroom/mobile android
+pnpm --filter @classroom/mobile ios
+pnpm --filter @classroom/mobile web
+
+# Linting
+pnpm --filter @classroom/mobile lint
+pnpm --filter @classroom/mobile lint:fix
+
+# Type checking (passes with 0 errors)
+pnpm --filter @classroom/mobile typecheck
 
 # Testing
-pnpm --filter frontend test
+pnpm --filter @classroom/mobile test
 ```
 
 ## Development Workflow
@@ -124,7 +135,7 @@ pnpm --filter frontend test
 3. **Testing**: Comprehensive test suite with Vitest
 4. **Authentication**: JWT-based authentication system
 
-### Frontend Development
+### Mobile Development
 
 1. **Expo Router**: File-based routing system
 2. **Cross-platform**: Runs on iOS, Android, and Web
@@ -149,16 +160,19 @@ docker compose up -d
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/v1/auth/register` - User registration
 - `POST /api/v1/auth/login` - User login
 - `GET /api/v1/auth/` - Auth status check
 
 ### Base Routes
+
 - `GET /api/v1/` - API health check
 
 ## Tech Stack
 
 ### Backend
+
 - **Runtime**: Node.js with TypeScript
 - **Framework**: Express.js
 - **Database**: PostgreSQL with Sequelize ORM
@@ -166,7 +180,8 @@ docker compose up -d
 - **Testing**: Vitest with Supertest
 - **Development**: tsx for hot reload
 
-### Frontend
+### Mobile
+
 - **Framework**: React Native with Expo
 - **Navigation**: Expo Router (file-based routing)
 - **Language**: TypeScript
@@ -182,42 +197,46 @@ The backend uses the `config` package with environment-specific files:
 - `packages/backend/src/config/development.json` - Development settings
 - `packages/backend/src/config/test.json` - Test settings
 
-### Frontend Configuration
+### Mobile Configuration
 
-Expo configuration is managed through `app.json` or `expo.json` in the frontend package.
+Expo configuration is managed through `app.json` or `expo.json` in the mobile package.
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Database Connection Issues**
-   ```bash
-   # Ensure Docker is running
-   docker compose ps
-   
-   # Restart database
-   docker compose restart postgres
-   ```
+
+```bash
+# Ensure Docker is running
+docker compose ps
+
+# Restart database
+docker compose restart postgres
+```
 
 2. **Port Conflicts**
-   - Backend: Check if port 3232 is available
-   - Database: Check if ports 5432/5433 are available
+
+- Backend: Check if port 3232 is available
+- Database: Check if ports 5432/5433 are available
 
 3. **Expo Issues**
-   ```bash
-   # Clear Expo cache
-   npx expo start --clear
-   
-   # Reset Metro bundler
-   npx expo start --reset-cache
-   ```
+
+```bash
+# Clear Expo cache
+npx expo start --clear
+
+# Reset Metro bundler
+npx expo start --reset-cache
+```
 
 4. **Dependencies Issues**
-   ```bash
-   # Clean install
-   rm -rf node_modules packages/*/node_modules
-   pnpm install
-   ```
+
+```bash
+# Clean install
+rm -rf node_modules packages/*/node_modules
+pnpm install
+```
 
 ## Testing
 
@@ -242,11 +261,11 @@ pnpm --filter @classroom/backend test:coverage
 
 **Note**: Tests are configured to run sequentially to avoid database enum conflicts. Individual test files can be run separately for faster development cycles.
 
-### Frontend Testing
+### Mobile Testing
 
 ```bash
 # Run tests
-pnpm --filter frontend test
+pnpm --filter @classroom/mobile test
 ```
 
 ## Deployment
@@ -254,26 +273,22 @@ pnpm --filter frontend test
 ### Backend Deployment
 
 1. Build the application:
-   ```bash
-   pnpm --filter @classroom/backend build
-   ```
+
+```bash
+pnpm --filter @classroom/backend build
+```
 
 2. Set up production database and environment variables
 
 3. Deploy the built application
 
-### Frontend Deployment
+### Mobile Deployment
 
 1. **Expo Application Services (EAS)**:
-   ```bash
-   npx eas build --platform all
-   ```
 
-2. **Web Deployment**:
-   ```bash
-   pnpm --filter frontend web
-   # Deploy the web-build folder
-   ```
+```bash
+npx eas build --platform all
+```
 
 ## Contributing
 
@@ -284,4 +299,4 @@ pnpm --filter frontend test
 
 ## License
 
-[Add your license information here]
+MIT
