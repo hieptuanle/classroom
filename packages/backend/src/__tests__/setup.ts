@@ -2,6 +2,7 @@ import { getNodeEnv } from "@backend/libs/config";
 import logger from "@backend/libs/logger";
 
 import { db } from "../db/db";
+import Assignment from "../models/assignment";
 import Class from "../models/class";
 import Post from "../models/post";
 import User from "../models/user";
@@ -12,17 +13,26 @@ beforeAll(async () => {
     throw new Error("Tests must be run with NODE_ENV=test");
   }
 
-  // Connect to test database
-  await db.authenticate();
-  logger.info("Connected to test database");
+  try {
+    // Connect to test database
+    await db.authenticate();
+    logger.info("Connected to test database");
 
-  // Sync models with force option to recreate tables
-  await db.sync({ force: true });
+    // Drop and recreate database to ensure clean state
+    await db.drop();
+    await db.sync({ force: true });
+  }
+  catch (error) {
+    // If there's any database issue, log and try to continue
+    logger.error("Database setup warning:", error);
+    await db.sync({ force: true });
+  }
 });
 
 beforeEach(async () => {
   // Clean up data before each test but keep schema
   try {
+    await Assignment.destroy({ where: {}, truncate: true });
     await User.destroy({ where: {}, truncate: true });
     await Class.destroy({ where: {}, truncate: true });
     await Post.destroy({ where: {}, truncate: true });
