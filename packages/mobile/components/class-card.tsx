@@ -7,13 +7,11 @@ import type { ClassCardProps } from "@/types/class";
 export function ClassCard({
   class: classData,
   onPress,
-  showRole = false,
+  showRole: _showRole = false,
   showMenu = false,
-  userRole,
+  userRole: _userRole,
 }: ClassCardProps) {
-  const isTeacher = userRole === "teacher";
   const studentCount = classData.students.length;
-  const teacherCount = classData.teachers.length;
 
   return (
     <Pressable

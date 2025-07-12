@@ -14,7 +14,7 @@ import {
 import type { Comment, CommentSectionProps } from "@/types/post";
 
 export function CommentSection({
-  postId,
+  postId: _postId,
   comments,
   onAddComment,
   onLikeComment,

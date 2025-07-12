@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## File name conventions
+
+Always use kebab-case for file names.
+
 ## Development Commands
 
 ### Backend (packages/backend)
