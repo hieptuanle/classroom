@@ -6,86 +6,15 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 
-import { useColorScheme } from "@/components/use-color-scheme";
-import Colors from "@/constants/colors";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 32,
-    opacity: 0.7,
-  },
-  form: {
-    width: "100%",
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  button: {
-    borderRadius: 8,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 24,
-  },
-  footerText: {
-    fontSize: 14,
-  },
-  link: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});
-
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const colorScheme = useColorScheme();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -129,37 +58,32 @@ export default function LoginScreen() {
     }
   };
 
-  const colors = Colors[colorScheme ?? "light"];
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={[styles.container, { backgroundColor: colors.background }]}
+      className="flex-1 bg-gray-50 dark:bg-gray-900"
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContainer}
+        contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>Welcome Back</Text>
-          <Text style={[styles.subtitle, { color: colors.text }]}>
+        <View className="flex-1 justify-center px-6">
+          <Text className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+            Welcome Back
+          </Text>
+          <Text className="text-base text-center mb-8 opacity-70 text-gray-900 dark:text-white">
             Sign in to your account
           </Text>
 
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: colors.text }]}>Email</Text>
+          <View className="w-full">
+            <View className="mb-4">
+              <Text className="text-base font-semibold mb-2 text-gray-900 dark:text-white">
+                Email
+              </Text>
               <TextInput
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.background,
-                    borderColor: colors.tint,
-                    color: colors.text,
-                  },
-                ]}
+                className="border border-blue-500 rounded-lg px-4 py-3 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="Enter your email"
-                placeholderTextColor={colors.tabIconDefault}
+                placeholderTextColor="#9CA3AF"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -168,19 +92,14 @@ export default function LoginScreen() {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: colors.text }]}>Password</Text>
+            <View className="mb-4">
+              <Text className="text-base font-semibold mb-2 text-gray-900 dark:text-white">
+                Password
+              </Text>
               <TextInput
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.background,
-                    borderColor: colors.tint,
-                    color: colors.text,
-                  },
-                ]}
+                className="border border-blue-500 rounded-lg px-4 py-3 text-base bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="Enter your password"
-                placeholderTextColor={colors.tabIconDefault}
+                placeholderTextColor="#9CA3AF"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -189,28 +108,22 @@ export default function LoginScreen() {
             </View>
 
             <Pressable
-              style={[
-                styles.button,
-                {
-                  backgroundColor: colors.tint,
-                  opacity: isLoading ? 0.7 : 1,
-                },
-              ]}
+              className={`bg-blue-500 rounded-lg py-4 items-center mt-2 ${isLoading ? "opacity-70" : ""}`}
               onPress={handleLogin}
               disabled={isLoading}
             >
-              <Text style={[styles.buttonText, { color: colors.background }]}>
+              <Text className="text-base font-semibold text-white">
                 {isLoading ? "Signing In..." : "Sign In"}
               </Text>
             </Pressable>
 
-            <View style={styles.footer}>
-              <Text style={[styles.footerText, { color: colors.text }]}>
+            <View className="flex-row justify-center mt-6">
+              <Text className="text-sm text-gray-900 dark:text-white">
                 Don't have an account?
                 {" "}
               </Text>
               <Pressable onPress={() => router.push("/register" as any)}>
-                <Text style={[styles.link, { color: colors.tint }]}>
+                <Text className="text-sm font-semibold text-blue-500">
                   Sign Up
                 </Text>
               </Pressable>

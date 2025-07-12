@@ -1,78 +1,33 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-
-import Colors from "@/constants/colors";
+import { Text, View } from "react-native";
 
 import { ExternalLink } from "./external-link";
 import { MonoText } from "./styled-text";
-import { Text, View } from "./themed";
-
-const styles = StyleSheet.create({
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightContainer: {
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    lineHeight: 24,
-    textAlign: "center",
-  },
-  helpContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    alignItems: "center",
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    textAlign: "center",
-  },
-});
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
-      <View style={styles.getStartedContainer}>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
-        >
-          Open up the code for this screen:
+      <View className="items-center mx-12">
+        <Text className="text-base leading-6 text-center text-gray-800 dark:text-gray-200">
+          Mở code cho screen này tại:
         </Text>
 
-        <View
-          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)"
-        >
+        <View className="bg-gray-100 dark:bg-gray-800 rounded px-1 my-2">
           <MonoText>{path}</MonoText>
         </View>
 
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
-        >
-          Change any of the text, save the file, and your app will automatically update.
+        <Text className="text-base leading-6 text-center text-gray-800 dark:text-gray-200">
+          Đổi text, lưu file, và app sẽ tự động cập nhật.
         </Text>
       </View>
 
-      <View style={styles.helpContainer}>
+      <View className="mt-4 mx-5 items-center">
         <ExternalLink
-          style={styles.helpLink}
+          className="py-4"
           href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet"
         >
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
+          <Text className="text-center text-blue-500 dark:text-blue-400">
+            Nhấn vào đây nếu app không tự động cập nhật sau khi thay đổi.
           </Text>
         </ExternalLink>
       </View>
