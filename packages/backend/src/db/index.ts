@@ -4,19 +4,16 @@ import { Client } from "pg";
 
 import * as schema from "./schema";
 
-function createDb() {
-  const client = new Client({
-    host: config.get("database.host"),
-    port: config.get("database.port"),
-    user: config.get("database.username"),
-    password: config.get("database.password"),
-    database: config.get("database.name"),
-  });
-  return drizzle(client, {
-    schema,
-  });
-}
+export const client = new Client({
+  host: config.get("database.host"),
+  port: config.get("database.port"),
+  user: config.get("database.username"),
+  password: config.get("database.password"),
+  database: config.get("database.name"),
+});
 
-const db = createDb();
+const db = drizzle(client, {
+  schema,
+});
 
 export default db;
