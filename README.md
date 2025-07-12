@@ -141,8 +141,9 @@ pnpm --filter @classroom/mobile test
 2. **Cross-platform**: Runs on iOS, Android, and Web
 3. **TypeScript**: Full TypeScript support
 4. **TanStack Query**: Server state management with caching, background updates, and error handling
-5. **NativeWind**: Tailwind CSS styling for React Native
-6. **Testing**: Jest with Expo preset
+5. **Jotai**: Atomic state management for UI state without boilerplate
+6. **NativeWind**: Tailwind CSS styling for React Native
+7. **Testing**: Jest with Expo preset
 
 ### Database Management
 
@@ -169,6 +170,11 @@ docker compose up -d
   - Error handling for failed requests
   - Automatic caching and background updates
   - Clean, responsive UI with post cards
+- **Jotai State Management Demo**: Interactive UI components showcasing atomic state
+  - Counter with derived state (double value)
+  - Async state operations
+  - UI toggles and preferences
+  - Form validation with computed atoms
 
 ## API Endpoints
 
@@ -198,7 +204,8 @@ docker compose up -d
 - **Framework**: React Native with Expo
 - **Navigation**: Expo Router (file-based routing)
 - **Language**: TypeScript
-- **State Management**: TanStack Query v5 for server state
+- **Server State**: TanStack Query v5 for server state management
+- **UI State**: Jotai v2 for atomic state management
 - **Styling**: NativeWind v4 (Tailwind CSS for React Native)
 - **Testing**: Jest with Expo preset
 - **Icons**: Expo Vector Icons

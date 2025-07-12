@@ -70,7 +70,8 @@ This is a monorepo classroom management system with separate backend and mobile 
 - **Framework**: React Native with Expo
 - **Navigation**: Expo Router (file-based routing)
 - **Language**: TypeScript
-- **State Management**: TanStack Query v5 for server state management
+- **Server State**: TanStack Query v5 for server state management
+- **UI State**: Jotai v2 for simple atomic state management
 - **Styling**: NativeWind v4 (Tailwind CSS for React Native)
 - **Testing**: Jest with Expo preset
 - **Package**: mobile (not scoped)
@@ -82,11 +83,16 @@ This is a monorepo classroom management system with separate backend and mobile 
 - TypeScript configuration for React Native
 - Cross-platform development with shared codebase
 - TanStack Query setup in `app/_layout.tsx` with QueryClient and QueryClientProvider
+- Jotai Provider setup in `app/_layout.tsx` for atomic state management
+- Demo API integration on home screen (`app/(tabs)/index.tsx`) fetching JSONPlaceholder posts
+- Jotai state management demo in `components/jotai-demo.tsx` with interactive UI components
+- Atomic state store in `store/atoms.ts` with various UI state atoms and derived computations
 
 ### Mobile Key Dependencies
 
 - **@tanstack/react-query**: v5.83.0 - Server state management with caching
 - **@tanstack/eslint-plugin-query**: v5.81.2 - ESLint rules for TanStack Query
+- **jotai**: v2.12.5 - Atomic state management for UI state
 - **nativewind**: v4.1.23 - Tailwind CSS for React Native styling
 - **expo-router**: v5.1.3 - File-based routing system
 
@@ -126,4 +132,6 @@ This is a monorepo classroom management system with separate backend and mobile 
 - Expo development server provides hot reload for mobile development
 - Both packages support TypeScript with strict type checking
 - TanStack Query provides automatic caching, background updates, and error handling for API calls
-- Mobile app demonstrates modern React Native patterns with server state management
+- Jotai provides simple atomic state management for UI state without boilerplate
+- Mobile app demonstrates modern React Native patterns with both server and UI state management
+- Comprehensive test coverage for both individual atoms and integration scenarios
