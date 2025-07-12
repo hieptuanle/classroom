@@ -1,5 +1,6 @@
-import type { Submission } from "@backend-db/schema";
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
+
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 
 import { assignments, classes, submissions, users } from "@backend-db/schema";
 import {
@@ -12,8 +13,6 @@ import {
   // findSubmissionsByAssignment,
   // updateSubmissionGrade,
 } from "@backend-db/utils";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
-
 import {
   sendBadRequest,
   sendForbidden,
