@@ -1,5 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 
+import config from "config";
+import { eq, or } from "drizzle-orm";
+import jwt from "jsonwebtoken";
+
 import { users } from "@backend-db/schema";
 import {
   comparePassword,
@@ -9,10 +13,6 @@ import {
   findUserByUsername,
   updateUserLastLogin,
 } from "@backend-db/utils";
-import config from "config";
-import { eq, or } from "drizzle-orm";
-import jwt from "jsonwebtoken";
-
 import {
   sendBadRequest,
   sendInternalServerError,

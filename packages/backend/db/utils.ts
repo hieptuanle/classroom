@@ -46,7 +46,7 @@ export async function comparePassword(password: string, hashedPassword: string) 
 }
 
 // Class utilities
-export async function createClass(classData: Omit<NewClass, "id" | "createdAt" | "updatedAt">) {
+export async function createClass(classData: Omit<NewClass, "id" | "createdAt" | "updatedAt" | "classCode">) {
   const classCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
   const [classRecord] = await db.insert(classes).values({

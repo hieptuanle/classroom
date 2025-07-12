@@ -1,7 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "baseUrl": "./",
+    "module": "CommonJS",
+    // "moduleResolution": "Bundler",
+    // "module": "NodeNext",
+    "moduleResolution": "Node",
     "paths": {
       "@backend/*": ["src/*"],
       "@backend-db/*": ["db/*"],
@@ -9,8 +15,15 @@
       "@backend-libs/*": ["src/libs/*"],
       "@backend-routes/*": ["src/routes/*"]
     },
-    "types": ["vitest/globals"],
+    "allowJs": false,
+    "checkJs": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    // "types": ["vitest/globals"],
     "outDir": "./dist",
+    "sourceMap": true,
+    // "sourceMap": true,
     "esModuleInterop": true
   }
 }

@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { and, asc, eq, or, sql } from "drizzle-orm";
+
 import { classEnrollments, classes, users } from "@backend-db/schema";
 import {
   createClass,
@@ -9,10 +11,9 @@ import {
   findClassEnrollments,
   findClassesByOwner,
   findEnrollment,
+  findUserEnrollments,
   updateClassInviteCode,
 } from "@backend-db/utils";
-import { and, asc, desc, eq, or, sql } from "drizzle-orm";
-
 import {
   sendBadRequest,
   sendForbidden,
@@ -81,7 +82,6 @@ export async function getMyClasses(req: Request, res: Response) {
     const currentUser = (req as any).currentUser;
     const { page = 1, limit = 10, search } = req.query;
 
-    let query = db.select().from(classes);
     const whereClauses = [];
 
     // Filter by ownership or enrollment
@@ -122,6 +122,8 @@ export async function getMyClasses(req: Request, res: Response) {
         sql`${classes.classCode} ILIKE ${`%${search}%`}`,
       ));
     }
+
+    const query = db.select().from(classes).where(and(...whereClauses));
 
     // Add pagination
     const offset = (Number(page) - 1) * Number(limit);

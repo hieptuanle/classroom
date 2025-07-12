@@ -1,15 +1,16 @@
 import express from "express";
-import { verifyToken } from "../../controllers/auth/index.js";
+
 import {
   createAssignmentController,
-  getClassAssignments,
   getAssignmentById,
-  updateAssignment,
-  submitAssignment,
   getAssignmentSubmissions,
-  gradeSubmission,
+  getClassAssignments,
   getMySubmissions,
-} from "../../controllers/assignment/index.js";
+  gradeSubmission,
+  submitAssignment,
+  updateAssignment,
+} from "../../controllers/assignment/index";
+import { verifyToken } from "../../controllers/auth/index";
 
 const router = express.Router();
 
@@ -28,4 +29,4 @@ router.get("/:id/submissions", getAssignmentSubmissions);
 router.post("/submissions/:submissionId/grade", gradeSubmission);
 router.get("/submissions/my", getMySubmissions);
 
-export default router; 
+export default router;
