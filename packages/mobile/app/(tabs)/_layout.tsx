@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import React from "react";
@@ -8,11 +9,12 @@ import { useColorScheme } from "@/components/use-color-scheme";
 import Colors from "@/constants/colors";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
+
+function IoniconsTabBarIcon(props: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -30,8 +32,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tab One",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Home",
+          tabBarIcon: ({ color }) => <IoniconsTabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -49,10 +51,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="classes"
+        options={{
+          title: "Classes",
+          tabBarIcon: ({ color }) => <IoniconsTabBarIcon name="school" color={color} />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="two"
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "To-Do",
+          tabBarIcon: ({ color }) => <IoniconsTabBarIcon name="checkmark-circle" color={color} />,
         }}
       />
     </Tabs>
