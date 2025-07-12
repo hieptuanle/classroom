@@ -4,15 +4,15 @@ import config from "config";
 import { eq, or } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
-import { users } from "@backend-db/schema";
+import db from "@backend/db";
+import { users } from "@backend/db/schema";
 import {
   comparePassword,
   createUser,
   findUserByEmail,
   findUserById,
-  findUserByUsername,
   updateUserLastLogin,
-} from "@backend-db/utils";
+} from "@backend/db/utils";
 import {
   sendBadRequest,
   sendInternalServerError,
@@ -20,7 +20,6 @@ import {
   sendSuccess,
   sendUnauthorized,
 } from "@backend/helpers/response";
-import { db } from "@backend/index";
 import logger from "@backend/libs/logger";
 
 const privateKey = config.get("key.privateKey") as string;

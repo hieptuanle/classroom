@@ -9,8 +9,8 @@ import {
   gradeSubmission,
   submitAssignment,
   updateAssignment,
-} from "../../controllers/assignment/index";
-import { verifyToken } from "../../controllers/auth/index";
+} from "@backend/controllers/assignment/index";
+import { verifyToken } from "@backend/controllers/auth/index";
 
 const router = express.Router();
 

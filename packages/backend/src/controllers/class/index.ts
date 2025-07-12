@@ -1,28 +1,26 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { and, asc, eq, or, sql } from "drizzle-orm";
 
-import { classEnrollments, classes, users } from "@backend-db/schema";
+import db from "@backend/db";
+import { classEnrollments, classes, users } from "@backend/db/schema";
 import {
   createClass,
   createEnrollment,
   findClassByCode,
   findClassById,
   findClassEnrollments,
-  findClassesByOwner,
   findEnrollment,
   findUserEnrollments,
   updateClassInviteCode,
-} from "@backend-db/utils";
+} from "@backend/db/utils";
 import {
   sendBadRequest,
   sendForbidden,
   sendInternalServerError,
   sendNotFound,
   sendSuccess,
-  sendUnauthorized,
 } from "@backend/helpers/response";
-import { db } from "@backend/index";
 import logger from "@backend/libs/logger";
 
 // Create a new class

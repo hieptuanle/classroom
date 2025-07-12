@@ -1,10 +1,9 @@
 import express from "express";
 
-// import users from './users';
-import { setHeadersForCORS } from "../helpers/response";
-import assignmentRoutes from "./assignment/index";
-import authRoutes from "./auth/index";
-import classRoutes from "./class/index";
+import { setHeadersForCORS } from "@backend/helpers/response";
+import assignmentRoutes from "@backend/routes/assignment/index";
+import authRoutes from "@backend/routes/auth/index";
+import classRoutes from "@backend/routes/class/index";
 
 const routes = express.Router();
 

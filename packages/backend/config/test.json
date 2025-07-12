@@ -3,12 +3,14 @@
     "port": 9001
   },
   "database": {
+    "url": "postgresql://postgres:postgres@localhost:5433/classroom_test",
     "host": "localhost",
     "port": 5433,
     "username": "postgres",
     "password": "postgres",
-    "name": "gg_classroom",
-    "logging": false
+    "name": "classroom_test",
+    "logging": false,
+    "ssl": false
   },
   "key": {
     "privateKey": "37LvDSm4XvjYOh9Y",

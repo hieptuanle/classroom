@@ -1,7 +1,7 @@
 import express from "express";
 
-import { login, register } from "@backend/controllers/auth/index.js";
-import { sendSuccess } from "@backend/helpers/response.js";
+import { login, register } from "@backend/controllers/auth/index";
+import { sendSuccess } from "@backend/helpers/response";
 
 const routes = express.Router();
 

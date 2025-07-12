@@ -1,9 +1,10 @@
 import bcrypt from "bcryptjs";
 import { and, count, eq, or, sql } from "drizzle-orm";
 
+import db from "@backend/db";
+
 import type { NewAssignment, NewClass, NewClassEnrollment, NewSubmission, NewUser } from "./schema";
 
-import { db } from "../src/index";
 import { assignments, classEnrollments, classes, submissions, users } from "./schema";
 
 // User utilities
@@ -166,7 +167,7 @@ export async function updateSubmissionGrade(
 }
 
 // Pagination utilities
-export async function getPaginatedResults<T>(
+export async function getPaginatedResults(
   query: any,
   page: number = 1,
   limit: number = 10,

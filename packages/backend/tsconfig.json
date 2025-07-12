@@ -2,15 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@backend/*": ["src/*"],
-      "@backend-db/*": ["db/*"],
-      "@backend-helpers/*": ["src/helpers/*"],
-      "@backend-libs/*": ["src/libs/*"],
-      "@backend-routes/*": ["src/routes/*"]
-    },
+    "paths": { "@backend/*": ["src/*"] },
     "types": ["vitest/globals"],
     "outDir": "./dist",
     "esModuleInterop": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
   }
 }

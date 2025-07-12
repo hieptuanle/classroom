@@ -2,7 +2,8 @@ import type { Request, Response } from "express";
 
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 
-import { assignments, classes, submissions, users } from "@backend-db/schema";
+import db from "@backend/db";
+import { assignments, classes, submissions, users } from "@backend/db/schema";
 import {
   createAssignment,
   createSubmission,
@@ -12,7 +13,7 @@ import {
   findSubmissionByAssignmentAndStudent,
   // findSubmissionsByAssignment,
   // updateSubmissionGrade,
-} from "@backend-db/utils";
+} from "@backend/db/utils";
 import {
   sendBadRequest,
   sendForbidden,
@@ -21,7 +22,6 @@ import {
   sendSuccess,
   // sendUnauthorized,
 } from "@backend/helpers/response";
-import { db } from "@backend/index";
 import logger from "@backend/libs/logger";
 
 // Create a new assignment

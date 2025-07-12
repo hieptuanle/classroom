@@ -54,7 +54,7 @@ docker run backend-test
 The docker-compose setup includes PostgreSQL databases for different environments:
 
 - **Development**: `postgres-dev` on port 5432
-- **Production**: `postgres-prod` on port 5433  
+- **Production**: `postgres-prod` on port 5433
 - **Testing**: `postgres-test` on port 5434
 
 ### Database Connection
@@ -152,4 +152,4 @@ To connect the frontend to this backend:
 - The backend uses TypeScript with `tsx` for development
 - Production builds compile TypeScript to JavaScript
 - Database migrations should be run manually or added to startup scripts
-- The setup includes separate databases for development, testing, and production 
+- The setup includes separate databases for development, testing, and production
