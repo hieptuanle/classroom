@@ -30,7 +30,7 @@ export default function createConfig(options, ...userConfigs) {
           "error",
           {
             case: "kebabCase",
-            ignore: ["README.md", "CLAUDE.md"],
+            ignore: ["README.md", "CLAUDE.md", "DOCKER_README.md", "CONTROLLERS_README.md"],
           },
         ],
       },

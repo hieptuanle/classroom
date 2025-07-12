@@ -2,13 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@backend/*": [
-        "./src/*"
-      ]
-    },
+    "paths": { "@backend/*": ["src/*"] },
     "types": ["vitest/globals"],
     "outDir": "./dist",
     "esModuleInterop": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
   }
 }

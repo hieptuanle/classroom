@@ -4,13 +4,14 @@ import config from "config";
 import jwt from "jsonwebtoken";
 import { vi } from "vitest";
 
+import { createUser, findUserByUsername } from "@backend/db/utils";
+
 import { login, register } from "../controllers/auth/index";
 import {
   sendBadRequest,
   sendSuccess,
   sendUnauthorized,
 } from "../helpers/response";
-import User from "../models/user";
 
 // Mock the response helpers
 vi.mock("../helpers/response", () => ({
@@ -43,7 +44,7 @@ describe("auth Controller", () => {
         email: "newuser@example.com",
         username: "newuser",
         password: "password123",
-        full_name: "New User",
+        fullName: "New User",
       };
 
       mockRequest.body = userData;
@@ -51,11 +52,11 @@ describe("auth Controller", () => {
       await register(mockRequest as Request, mockResponse as Response);
 
       // Verify user was created
-      const user = await User.findOne({ where: { username: "newuser" } });
+      const user = await findUserByUsername("newuser");
       expect(user).toBeTruthy();
-      expect(user?.dataValues.username).toBe(userData.username);
-      expect(user?.dataValues.email).toBe(userData.email);
-      expect(user?.dataValues.role).toBe("student");
+      expect(user?.username).toBe(userData.username);
+      expect(user?.email).toBe(userData.email);
+      expect(user?.role).toBe("student");
 
       // Verify response
       expect(sendSuccess).toHaveBeenCalledWith(mockResponse, {
@@ -72,11 +73,11 @@ describe("auth Controller", () => {
         email: "existing@example.com",
         username: "existinguser",
         password: "password123",
-        full_name: "Existing User",
+        fullName: "Existing User",
       };
 
       // Create user first
-      await User.create({ ...userData, role: "student" });
+      await createUser({ ...userData, role: "student" });
 
       mockRequest.body = userData;
 
@@ -95,12 +96,12 @@ describe("auth Controller", () => {
         email: "auth@example.com",
         username: "authuser",
         password: "password123",
-        full_name: "Auth User",
+        fullName: "Auth User",
         role: "student" as const,
       };
 
       // Create user
-      await User.create(userData);
+      await createUser(userData);
 
       mockRequest.body = {
         email: "auth@example.com",
@@ -143,12 +144,12 @@ describe("auth Controller", () => {
         email: "wrongpass@example.com",
         username: "wrongpass",
         password: "correctpass",
-        full_name: "Wrong Pass User",
+        fullName: "Wrong Pass User",
         role: "student" as const,
       };
 
       // Create user
-      await User.create(userData);
+      await createUser(userData);
 
       mockRequest.body = {
         email: "wrongpass@example.com",

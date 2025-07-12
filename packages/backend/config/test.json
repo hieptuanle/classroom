@@ -8,7 +8,8 @@
     "username": "postgres",
     "password": "postgres",
     "name": "classroom_test",
-    "logging": false
+    "logging": false,
+    "ssl": false
   },
   "key": {
     "privateKey": "37LvDSm4XvjYOh9Y",

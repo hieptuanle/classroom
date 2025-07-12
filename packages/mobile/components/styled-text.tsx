@@ -1,4 +1,4 @@
-import type { TextProps } from "./themed";
+import type { TextProps } from "./theme-types";
 
 import { Text } from "./themed";
 

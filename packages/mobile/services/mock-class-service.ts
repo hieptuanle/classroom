@@ -204,7 +204,7 @@ class MockClassService {
     return foundClass;
   }
 
-  async generateInviteCode(classId?: string): Promise<string> {
+  async generateInviteCode(_classId?: string): Promise<string> {
     await new Promise(resolve => setTimeout(resolve, 300));
     return this.createInviteCode();
   }

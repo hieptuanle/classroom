@@ -3,14 +3,29 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "run-s build:ts build:alias",
+    "build:ts": "tsc",
+    "build:alias": "tsc-alias",
+    "watch": "tsc --watch",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:drop": "tsx src/scripts/drop-database.ts",
+    "db:drop:force": "tsx src/scripts/drop-database.ts --force",
+    "check": "run-s typecheck lint",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_ENV=test vitest run",
+    "test": "NODE_ENV=test run-s db:drop:force db:push:force test:run",
+    "test:run": "NODE_ENV=test vitest run",
     "test:watch": "NODE_ENV=test vitest",
     "test:ui": "NODE_ENV=test vitest --ui",
     "test:coverage": "NODE_ENV=test vitest run --coverage",
+    "db:push:force": "drizzle-kit push --force",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
@@ -25,11 +40,11 @@
     "body-parser": "^2.2.0",
     "config": "^4.0.0",
     "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pg": "^8.16.3",
-    "sequelize": "^6.37.7",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "winston": "^3.17.0"
@@ -37,11 +52,15 @@
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^24.0.12",
+    "@types/pg": "^8.15.4",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/ui": "^3.2.4",
+    "drizzle-kit": "^0.31.4",
     "eslint-plugin-format": "^0.1.3",
+    "npm-run-all": "^4.1.5",
     "supertest": "^7.1.3",
+    "tsc-alias": "^1.8.16",
     "vitest": "^3.2.4"
   }
 }

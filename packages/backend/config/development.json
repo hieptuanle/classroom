@@ -1,6 +1,6 @@
 {
   "server": {
-    "port": 3232
+    "port": 4000
   },
   "database": {
     "host": "localhost",
@@ -8,7 +8,8 @@
     "username": "postgres",
     "password": "postgres",
     "name": "classroom",
-    "logging": true
+    "logging": true,
+    "ssl": false
   },
   "key": {
     "privateKey": "37LvDSm4XvjYOh9Y",

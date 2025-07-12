@@ -1,14 +1,17 @@
 import express from "express";
 
-// import users from './users';
-import { setHeadersForCORS } from "../helpers/response";
-import auth from "./auth/index.js";
+import { setHeadersForCORS } from "@backend/helpers/response";
+import assignmentRoutes from "@backend/routes/assignment/index";
+import authRoutes from "@backend/routes/auth/index";
+import classRoutes from "@backend/routes/class/index";
 
 const routes = express.Router();
 
 routes.use(setHeadersForCORS);
 
-routes.use("/auth", auth);
+routes.use("/auth", authRoutes);
+routes.use("/classes", classRoutes);
+routes.use("/assignments", assignmentRoutes);
 // routes.use('/users', users);
 
 routes.get("/", (_req, res) => {

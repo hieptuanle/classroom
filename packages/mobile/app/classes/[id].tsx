@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
-import { StreamTab } from "@/components/StreamTab";
+import { StreamTab } from "@/components/stream-tab";
 
 export default function ClassDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

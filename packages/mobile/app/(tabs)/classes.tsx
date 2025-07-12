@@ -1,22 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Class, ClassFilter } from "@/types/class";
 
-import { ClassCard } from "@/components/ClassCard";
-import { ClassCreateModal } from "@/components/ClassCreateModal";
-import { JoinClassModal } from "@/components/JoinClassModal";
-import { mockClassService } from "@/services/mockClassService";
+import { ClassCard } from "@/components/class-card";
+import { ClassCreateModal } from "@/components/class-create-modal";
+import { JoinClassModal } from "@/components/join-class-modal";
+import { mockClassService } from "@/services/mock-class-service";
 import {
   classFilterAtom,
   createClassModalAtom,
   joinClassModalAtom,
   userRoleAtom,
-} from "@/store/classAtoms";
+} from "@/store/class-atoms";
 
 const filterTabs: { key: ClassFilter; label: string }[] = [
   { key: "teaching", label: "Teaching" },
@@ -40,14 +40,7 @@ export default function ClassesScreen() {
 
   const isTeacher = userRole === "teacher";
 
-  // Load classes when filter changes
-  React.useEffect(() => {
-    // Clear existing classes and show loading when filter changes
-    setClasses([]);
-    loadClasses();
-  }, [filter]);
-
-  const loadClasses = async () => {
+  const loadClasses = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await mockClassService.getClasses(filter);
@@ -59,7 +52,14 @@ export default function ClassesScreen() {
     finally {
       setIsLoading(false);
     }
-  };
+  }, [filter]);
+
+  // Load classes when filter changes
+  React.useEffect(() => {
+    // Clear existing classes and show loading when filter changes
+    setClasses([]);
+    loadClasses();
+  }, [filter, loadClasses]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);

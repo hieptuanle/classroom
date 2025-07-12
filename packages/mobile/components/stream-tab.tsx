@@ -1,16 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Post, PostFilter } from "@/types/post";
 
-import { CreatePostModal } from "@/components/CreatePostModal";
-import { PostCard } from "@/components/PostCard";
-import { mockPostService } from "@/services/mockPostService";
-import { userRoleAtom } from "@/store/classAtoms";
-import { createPostModalAtom, postFilterAtom } from "@/store/postAtoms";
+import { CreatePostModal } from "@/components/create-post-modal";
+import { PostCard } from "@/components/post-card";
+import { mockPostService } from "@/services/mock-post-service";
+import { userRoleAtom } from "@/store/class-atoms";
+import { createPostModalAtom, postFilterAtom } from "@/store/post-atoms";
 
 const filterTabs: { key: PostFilter; label: string; icon: string }[] = [
   { key: "all", label: "All", icon: "list-outline" },
@@ -38,15 +38,7 @@ export function StreamTab({ classId }: StreamTabProps) {
 
   const isTeacher = userRole === "teacher";
 
-  // Load posts when filter changes
-  React.useEffect(() => {
-    setPosts([]);
-    setPage(0);
-    setHasMore(true);
-    loadPosts(true);
-  }, [filter, classId]);
-
-  const loadPosts = async (refresh = false) => {
+  const loadPosts = useCallback(async (refresh = false) => {
     if (!hasMore && !refresh)
       return;
 
@@ -80,7 +72,15 @@ export function StreamTab({ classId }: StreamTabProps) {
       if (refresh)
         setIsRefreshing(false);
     }
-  };
+  }, [filter, classId, hasMore, page]);
+
+  // Load posts when filter changes
+  React.useEffect(() => {
+    setPosts([]);
+    setPage(0);
+    setHasMore(true);
+    loadPosts(true);
+  }, [filter, classId, loadPosts]);
 
   const handleRefresh = () => {
     loadPosts(true);
@@ -92,18 +92,16 @@ export function StreamTab({ classId }: StreamTabProps) {
     }
   };
 
-  const handlePostPress = (post: Post) => {
+  const handlePostPress = (_post: Post) => {
     // Navigate to post detail
     // In a real implementation with Expo Router:
     // router.push(`/posts/${post.id}`);
-    console.log("Navigate to post:", post.id);
   };
 
-  const handleCommentPress = (post: Post) => {
+  const handleCommentPress = (_post: Post) => {
     // Navigate to post detail with comments focused
     // In a real implementation with Expo Router:
     // router.push(`/posts/${post.id}?showComments=true`);
-    console.log("Comment on post:", post.id);
   };
 
   const handleLikePress = async (post: Post) => {
@@ -127,9 +125,8 @@ export function StreamTab({ classId }: StreamTabProps) {
     }
   };
 
-  const handleSharePress = (post: Post) => {
+  const handleSharePress = (_post: Post) => {
     // Handle sharing
-    console.log("Share post:", post.id);
   };
 
   const handleCreatePost = async (postData: any) => {

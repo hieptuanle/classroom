@@ -73,7 +73,7 @@ describe("response Helpers", () => {
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
-      message: "You do not have rights to access this resource.",
+      message: "You do not have rights to access this resource",
     });
   });
 
@@ -83,7 +83,7 @@ describe("response Helpers", () => {
     expect(mockResponse.status).toHaveBeenCalledWith(404);
     expect(mockResponse.send).toHaveBeenCalledWith({
       success: false,
-      message: "Resource not found.",
+      message: "Resource not found",
     });
   });
 

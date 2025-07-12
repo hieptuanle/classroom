@@ -174,7 +174,7 @@ export function PostCard({
         {post.attachments.length > 0 && (
           <View className="mt-3">
             <View className="flex-row flex-wrap">
-              {post.attachments.slice(0, 3).map((attachment, index) => (
+              {post.attachments.slice(0, 3).map(attachment => (
                 <View
                   key={attachment.id}
                   className="mr-2 mb-2 bg-gray-100 rounded-lg overflow-hidden"

@@ -22,7 +22,7 @@ import {
   postTitleAtom,
   postTypeAtom,
   resetPostFormAtom,
-} from "@/store/postAtoms";
+} from "@/store/post-atoms";
 
 export function CreatePostModal({
   visible,

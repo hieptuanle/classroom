@@ -2,8 +2,9 @@ import bodyParser from "body-parser";
 import express from "express";
 import request from "supertest";
 
+import { createUser, findUserByUsername } from "@backend/db/utils";
+
 import { setHeadersForCORS } from "../helpers/response";
-import User from "../models/user";
 import routes from "../routes/index";
 
 // Create test app
@@ -69,7 +70,7 @@ describe("auth routes", () => {
       email: "testuser@example.com",
       username: "testuser",
       password: "password123",
-      full_name: "Test User",
+      fullName: "Test User",
     };
 
     const response = await request(app)
@@ -83,7 +84,7 @@ describe("auth routes", () => {
         user: expect.objectContaining({
           username: userData.username,
           email: userData.email,
-          full_name: userData.full_name,
+          fullName: userData.fullName,
           role: "student",
         }),
         token: expect.any(String),
@@ -91,7 +92,7 @@ describe("auth routes", () => {
     });
 
     // Verify user was created in database
-    const user = await User.findOne({ where: { username: "testuser" } });
+    const user = await findUserByUsername("testuser");
     expect(user).toBeTruthy();
   });
 
@@ -100,11 +101,11 @@ describe("auth routes", () => {
       email: "duplicate@example.com",
       username: "duplicateuser",
       password: "password123",
-      full_name: "Duplicate User",
+      fullName: "Duplicate User",
     };
 
     // Create user first
-    await User.create({ ...userData, role: "student" });
+    await createUser({ ...userData, role: "student" });
 
     const response = await request(app)
       .post("/api/v1/auth/register")
@@ -122,12 +123,12 @@ describe("auth routes", () => {
       email: "login@example.com",
       username: "loginuser",
       password: "password123",
-      full_name: "Login User",
+      fullName: "Login User",
       role: "student" as const,
     };
 
     // Create user
-    await User.create(userData);
+    await createUser(userData);
 
     const response = await request(app)
       .post("/api/v1/auth/login")
@@ -154,12 +155,12 @@ describe("auth routes", () => {
       email: "invalid@example.com",
       username: "invaliduser",
       password: "correctpass",
-      full_name: "Invalid User",
+      fullName: "Invalid User",
       role: "student" as const,
     };
 
     // Create user
-    await User.create(userData);
+    await createUser(userData);
 
     const response = await request(app)
       .post("/api/v1/auth/login")
