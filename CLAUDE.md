@@ -65,20 +65,30 @@ This is a monorepo classroom management system with separate backend and mobile 
 - **Classes**: (model exists but not fully implemented)
 - **Posts**: (model exists but not fully implemented)
 
-### mobile Architecture
+### Mobile Architecture
 
 - **Framework**: React Native with Expo
 - **Navigation**: Expo Router (file-based routing)
 - **Language**: TypeScript
+- **State Management**: TanStack Query v5 for server state management
+- **Styling**: NativeWind v4 (Tailwind CSS for React Native)
 - **Testing**: Jest with Expo preset
 - **Package**: mobile (not scoped)
 
-### mobile Structure
+### Mobile Structure
 
 - Uses Expo Router for navigation
 - Supports iOS, Android, and Web platforms
 - TypeScript configuration for React Native
 - Cross-platform development with shared codebase
+- TanStack Query setup in `app/_layout.tsx` with QueryClient and QueryClientProvider
+
+### Mobile Key Dependencies
+
+- **@tanstack/react-query**: v5.83.0 - Server state management with caching
+- **@tanstack/eslint-plugin-query**: v5.81.2 - ESLint rules for TanStack Query
+- **nativewind**: v4.1.23 - Tailwind CSS for React Native styling
+- **expo-router**: v5.1.3 - File-based routing system
 
 ## TypeScript Configuration
 
@@ -115,3 +125,5 @@ This is a monorepo classroom management system with separate backend and mobile 
 - Database connection managed in `src/db/db.ts`
 - Expo development server provides hot reload for mobile development
 - Both packages support TypeScript with strict type checking
+- TanStack Query provides automatic caching, background updates, and error handling for API calls
+- Mobile app demonstrates modern React Native patterns with server state management

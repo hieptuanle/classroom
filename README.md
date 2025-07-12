@@ -140,7 +140,9 @@ pnpm --filter @classroom/mobile test
 1. **Expo Router**: File-based routing system
 2. **Cross-platform**: Runs on iOS, Android, and Web
 3. **TypeScript**: Full TypeScript support
-4. **Testing**: Jest with Expo preset
+4. **TanStack Query**: Server state management with caching, background updates, and error handling
+5. **NativeWind**: Tailwind CSS styling for React Native
+6. **Testing**: Jest with Expo preset
 
 ### Database Management
 
@@ -156,6 +158,17 @@ docker compose down
 docker volume rm classroom_postgres_data
 docker compose up -d
 ```
+
+## Features
+
+### Mobile App Features
+
+- **Authentication UI**: Login and registration screens
+- **TanStack Query Demo**: Home screen displays latest posts from JSONPlaceholder API
+  - Demonstrates data fetching with loading states
+  - Error handling for failed requests
+  - Automatic caching and background updates
+  - Clean, responsive UI with post cards
 
 ## API Endpoints
 
@@ -185,6 +198,8 @@ docker compose up -d
 - **Framework**: React Native with Expo
 - **Navigation**: Expo Router (file-based routing)
 - **Language**: TypeScript
+- **State Management**: TanStack Query v5 for server state
+- **Styling**: NativeWind v4 (Tailwind CSS for React Native)
 - **Testing**: Jest with Expo preset
 - **Icons**: Expo Vector Icons
 
