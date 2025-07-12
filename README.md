@@ -6,7 +6,7 @@ A modern classroom management system built with Express.js backend and Expo Reac
 
 This is a monorepo containing:
 
-- **Backend**: Express.js API with TypeScript, PostgreSQL, and Sequelize ORM
+- **Backend**: Express.js API with TypeScript, PostgreSQL, and Drizzle ORM
 - **mobile**: Expo React Native app with TypeScript and Expo Router
 
 ## Prerequisites
@@ -131,7 +131,7 @@ pnpm --filter @classroom/mobile test
 ### Backend Development
 
 1. **API Development**: The backend runs on port 3232 with hot reload
-2. **Database**: Uses PostgreSQL with Sequelize ORM
+2. **Database**: Uses PostgreSQL with Drizzle ORM
 3. **Testing**: Comprehensive test suite with Vitest
 4. **Authentication**: JWT-based authentication system
 
@@ -194,7 +194,7 @@ docker compose up -d
 
 - **Runtime**: Node.js with TypeScript
 - **Framework**: Express.js
-- **Database**: PostgreSQL with Sequelize ORM
+- **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: JWT
 - **Testing**: Vitest with Supertest
 - **Development**: tsx for hot reload

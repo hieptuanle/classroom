@@ -16,7 +16,7 @@ The classroom management system provides:
 ### Backend
 
 - **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL with Sequelize ORM
+- **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: JWT-based authentication
 - **File Storage**: Multer for file uploads
 - **Email**: SendGrid/Nodemailer for notifications
