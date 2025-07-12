@@ -3,6 +3,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { StreamTab } from "@/components/StreamTab";
+
 export default function ClassDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -32,13 +34,7 @@ export default function ClassDetailScreen() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "stream":
-        return (
-          <View className="p-4">
-            <Text className="text-gray-600 text-center mt-8">
-              No announcements yet
-            </Text>
-          </View>
-        );
+        return <StreamTab classId={id} />;
       case "assignments":
         return (
           <View className="p-4">
@@ -171,9 +167,9 @@ export default function ClassDetailScreen() {
       </View>
 
       {/* Tab Content */}
-      <ScrollView className="flex-1">
+      <View className="flex-1">
         {renderTabContent()}
-      </ScrollView>
+      </View>
     </View>
   );
 }
