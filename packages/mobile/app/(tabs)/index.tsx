@@ -1,6 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
+import React from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import { JotaiDemo } from "@/components/jotai-demo";
 import { showWelcomeAtom, useAtomValue } from "@/store";
@@ -28,6 +35,30 @@ export default function HomeScreen() {
     queryFn: fetchPosts,
   });
 
+  // Animation values
+  const opacity = useSharedValue(showWelcome ? 1 : 0);
+  const height = useSharedValue(showWelcome ? 1 : 0);
+
+  // Update animations when showWelcome changes
+  React.useEffect(() => {
+    const config = {
+      duration: 300,
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+    };
+
+    opacity.value = withTiming(showWelcome ? 1 : 0, config);
+    height.value = withTiming(showWelcome ? 1 : 0, config);
+  }, [showWelcome, opacity, height]);
+
+  // Animated styles
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ scaleY: height.value }],
+      overflow: "hidden" as const,
+    };
+  });
+
   const handleLoginPress = () => {
     router.push("/login" as any);
   };
@@ -42,8 +73,8 @@ export default function HomeScreen() {
       contentContainerStyle={{ padding: 20 }}
       showsVerticalScrollIndicator={false}
     >
-      {showWelcome && (
-        <View className="bg-white rounded-xl p-8 shadow-lg w-full mb-6">
+      <Animated.View style={[animatedStyle, { marginBottom: 24 }]}>
+        <View className="bg-white rounded-xl p-8 shadow-lg w-full">
           <Text className="text-3xl font-bold text-center mb-5 text-gray-800">
             Welcome to Classroom
           </Text>
@@ -71,7 +102,7 @@ export default function HomeScreen() {
             </Pressable>
           </View>
         </View>
-      )}
+      </Animated.View>
 
       {/* Jotai Demo Section */}
       <JotaiDemo />
