@@ -168,6 +168,9 @@ importers:
       nativewind:
         specifier: ^4.1.23
         version: 4.1.23(react-native-reanimated@3.17.5(@babel/core@7.28.0)(react-native@0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.17)
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -9233,7 +9236,6 @@ snapshots:
       magic-string: 0.30.17
     optionalDependencies:
       vite: 6.3.5(@types/node@24.0.13)(jiti@1.21.7)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
-    optional: true
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -9264,7 +9266,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.12)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.13)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -14696,7 +14698,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-    optional: true
 
   vite@6.3.5(@types/node@24.0.12)(jiti@1.21.7)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0):
     dependencies:
@@ -14731,7 +14732,6 @@ snapshots:
       terser: 5.43.1
       tsx: 4.20.3
       yaml: 2.8.0
-    optional: true
 
   vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.0.12)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0):
     dependencies:
@@ -14820,7 +14820,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-    optional: true
 
   vlq@1.0.1: {}
 
