@@ -15,6 +15,7 @@ import { useColorScheme } from "@/components/use-color-scheme";
 // Create a client
 const queryClient = new QueryClient();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { unstable_settings } from "./router-config";
 
 export {
