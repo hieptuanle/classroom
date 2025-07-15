@@ -13,7 +13,9 @@
   },
   "key": {
     "privateKey": "37LvDSm4XvjYOh9Y",
-    "tokenExpireInSeconds": 1440
+    "refreshTokenSecret": "37LvDSm4XvjYOh9Y",
+    "tokenExpireInSeconds": 1440,
+    "refreshTokenExpireInSeconds": 604800
   },
   "pagination": {
     "defaultPage": 1,

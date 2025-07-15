@@ -1,7 +1,6 @@
 import express from "express";
 
-import { login, register } from "@backend/controllers/auth/index";
-import { sendSuccess } from "@backend/helpers/response";
+import { login, logout, refreshToken, register } from "@backend/controllers/auth/index";
 
 /**
  * @swagger
@@ -60,14 +59,47 @@ import { sendSuccess } from "@backend/helpers/response";
  *         description: Invalid credentials
  */
 
-const routes = express.Router();
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout a user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
 
-routes.get("/", (_req, res) => {
-  sendSuccess(res, { message: "Hello World auth" });
-});
+/**
+ * @swagger
+ * /api/v1/auth/refresh-token:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Invalid or expired refresh token
+ */
+
+const routes = express.Router();
 
 routes.route("/register").post(register);
 
 routes.route("/login").post(login);
+routes.route("/logout").post(logout);
+routes.route("/refresh-token").post(refreshToken);
 
 export default routes;

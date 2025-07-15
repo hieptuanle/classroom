@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import config from "config";
+import "dotenv/config";
 import { eq, or } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
@@ -22,8 +23,12 @@ import {
 } from "@backend/helpers/response";
 import logger from "@backend/libs/logger";
 
-const privateKey = config.get("key.privateKey") as string;
-const tokenExpireInSeconds = config.get("key.tokenExpireInSeconds") as number;
+const NODE_ENV = process.env.NODE_ENV as string || "development";
+
+const privateKey = config.get("key.privateKey") as string || "secret";
+const tokenExpireInSeconds = config.get("key.tokenExpireInSeconds") as number || 60 * 60 * 24 * 7; // 7 days default
+const refreshTokenSecret = config.get("key.refreshTokenSecret") as string || privateKey;
+const refreshTokenExpireInSeconds = config.get("key.refreshTokenExpireInSeconds") as number || 60 * 60 * 24 * 7; // 7 days default
 
 // Register new user
 export async function register(req: Request<any, any, { email: string; username: string; password: string; fullName: string; role?: "admin" | "teacher" | "student" }, any>, res: Response) {
@@ -53,16 +58,21 @@ export async function register(req: Request<any, any, { email: string; username:
       role,
     });
 
-    // Generate token
-    const token = jwt.sign(
-      {
-        id: newUser.id,
-        email: newUser.email,
-        role: newUser.role,
-      },
-      privateKey,
-      { expiresIn: tokenExpireInSeconds },
-    );
+    // Generate tokens
+    const token = jwt.sign({ id: newUser.id, email: newUser.email, role: newUser.role }, privateKey, { expiresIn: tokenExpireInSeconds });
+    const refreshToken = jwt.sign({ id: newUser.id, email: newUser.email, role: newUser.role }, refreshTokenSecret, { expiresIn: refreshTokenExpireInSeconds });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: tokenExpireInSeconds * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: refreshTokenExpireInSeconds * 1000,
+    });
 
     return sendSuccess(res, {
       message: "User registered successfully",
@@ -79,6 +89,7 @@ export async function register(req: Request<any, any, { email: string; username:
           updatedAt: newUser.updatedAt,
         },
         token,
+        refreshToken,
       },
     });
   }
@@ -120,31 +131,34 @@ export async function login(req: Request<any, any, { email: string; password: st
     await updateUserLastLogin(user.id);
 
     // Generate token
-    const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      privateKey,
-      { expiresIn: tokenExpireInSeconds },
-    );
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, privateKey, { expiresIn: tokenExpireInSeconds });
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, role: user.role }, refreshTokenSecret, { expiresIn: refreshTokenExpireInSeconds });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: tokenExpireInSeconds * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: refreshTokenExpireInSeconds * 1000,
+    });
 
     return sendSuccess(res, {
       message: "Login successful",
       data: {
         user: {
           id: user.id,
-          email: user.email,
           username: user.username,
           fullName: user.fullName,
-          avatarUrl: user.avatarUrl,
           role: user.role,
-          profile: user.profile,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
         },
         token,
+        refreshToken,
       },
     });
   }
@@ -154,12 +168,12 @@ export async function login(req: Request<any, any, { email: string; password: st
   }
 }
 
-// Logout user (client-side token removal)
-export async function logout(_req: Request, res: Response) {
+// Logout user (clear cookies)
+export async function logout(req: Request, res: Response) {
   try {
-    return sendSuccess(res, {
-      message: "Logout successful",
-    });
+    res.clearCookie("token");
+    res.clearCookie("refreshToken");
+    return sendSuccess(res, { message: "Logout successful" });
   }
   catch (error) {
     logger.error("Logout error:", error);
@@ -198,9 +212,9 @@ export async function getProfile(req: Request, res: Response) {
 }
 
 // Update user profile
-export async function updateProfile(req: Request<any, any, { fullName?: string; avatar_url?: string; profile?: any }, any>, res: Response) {
+export async function updateProfile(req: Request<any, any, { fullName?: string; role?: "admin" | "teacher" | "student" }, any>, res: Response) {
   try {
-    const { fullName, avatar_url, profile } = req.body;
+    const { fullName, role } = req.body;
     const user = await findUserById((req as any).currentUser.id);
 
     if (!user) {
@@ -211,10 +225,8 @@ export async function updateProfile(req: Request<any, any, { fullName?: string; 
     const updateData: any = {};
     if (fullName)
       updateData.fullName = fullName;
-    if (avatar_url)
-      updateData.avatarUrl = avatar_url;
-    if (profile)
-      updateData.profile = { ...(user.profile as any), ...profile };
+    if (role)
+      updateData.role = role;
 
     const [updatedUser] = await db.update(users)
       .set(updateData)
@@ -247,12 +259,10 @@ export async function updateProfile(req: Request<any, any, { fullName?: string; 
 // Verify JWT token middleware
 export async function verifyToken(req: Request, res: Response, next: NextFunction) {
   try {
-    const token
-      = req.body.token
-        || req.query.token
-        || req.headers["x-access-token"]
-        || (req.headers.authorization as string)?.replace("Bearer ", "");
-
+    let token = req.body.token || req.query.token || req.headers["x-access-token"] || (req.headers.authorization && (req.headers.authorization as string).replace("Bearer ", ""));
+    if (!token && req.cookies) {
+      token = req.cookies.token;
+    }
     if (!token) {
       return sendUnauthorized(res, "No token provided");
     }
@@ -273,5 +283,53 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
   }
 }
 
-// Legacy alias for backward compatibility
-export const authenticate = login;
+// Refresh token endpoint
+export async function refreshToken(req: Request<any, any, { refreshToken: string }, any>, res: Response) {
+  try {
+    let refreshToken = req.body.refreshToken;
+    if (!refreshToken && req.cookies) {
+      refreshToken = req.cookies.refreshToken;
+    }
+    if (!refreshToken) {
+      return sendBadRequest(res, "Refresh token is required");
+    }
+    let decoded: any;
+    try {
+      decoded = jwt.verify(refreshToken, refreshTokenSecret);
+    }
+    catch {
+      return sendUnauthorized(res, "Invalid or expired refresh token");
+    }
+    const user = await findUserById(decoded.id);
+    if (!user || !user.isActive) {
+      return sendUnauthorized(res, "Invalid user");
+    }
+    // Issue new access token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      privateKey,
+      { expiresIn: tokenExpireInSeconds },
+    );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: tokenExpireInSeconds * 1000,
+    });
+    return sendSuccess(res, {
+      message: "Token refreshed successfully",
+      data: {
+        token,
+        refreshToken,
+      },
+    });
+  }
+  catch (error) {
+    logger.error("Refresh token error:", error);
+    return sendInternalServerError(res, "Failed to refresh token");
+  }
+}
