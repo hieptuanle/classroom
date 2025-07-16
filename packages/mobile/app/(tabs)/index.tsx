@@ -10,29 +10,28 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { JotaiDemo } from "@/components/jotai-demo";
+import { userApi } from "@/services/api-service";
 import { showWelcomeAtom, useAtomValue } from "@/store";
 
-type Post = {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
+type User = {
+  id: string;
+  email: string;
+  username: string;
+  fullName: string | null;
+  role: string;
+  isActive: boolean;
 };
 
-const fetchPosts = async (): Promise<Post[]> => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
+const fetchUsers = async (): Promise<User[]> => {
+  return userApi.getUsers();
 };
 
 export default function HomeScreen() {
   const router = useRouter();
   const showWelcome = useAtomValue(showWelcomeAtom);
-  const { data: posts, isLoading, error } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
+  const { data: users, isLoading, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
   });
 
   // Animation values
@@ -108,41 +107,54 @@ export default function HomeScreen() {
       <JotaiDemo />
 
       <Text className="text-xl font-bold mb-4 text-gray-800">
-        TanStack Query Demo - Latest Posts
+        TanStack Query Demo - Backend Users
       </Text>
 
       {isLoading && (
         <View className="py-10 justify-center items-center">
           <ActivityIndicator size="large" color="#3b82f6" />
-          <Text className="mt-2 text-gray-600">Loading posts...</Text>
+          <Text className="mt-2 text-gray-600">Loading users...</Text>
         </View>
       )}
 
       {error && (
         <View className="py-10 justify-center items-center">
           <Text className="text-red-500 text-center">
-            Error loading posts:
+            Error loading users:
             {" "}
             {error.message}
           </Text>
         </View>
       )}
 
-      {posts && posts.map(item => (
+      {users && users.map(item => (
         <View
           key={item.id}
           className="bg-white p-4 mb-3 rounded-lg shadow-sm border border-gray-200"
         >
-          <Text className="text-lg font-semibold text-gray-800 mb-2" numberOfLines={2}>
-            {item.title}
+          <Text className="text-lg font-semibold text-gray-800 mb-2">
+            {item.fullName || item.username}
           </Text>
-          <Text className="text-gray-600 text-sm" numberOfLines={3}>
-            {item.body}
+          <Text className="text-gray-600 text-sm mb-1">
+            @
+            {item.username}
+            {" "}
+            •
+            {" "}
+            {item.email}
           </Text>
-          <Text className="text-xs text-gray-400 mt-2">
-            Post #
-            {item.id}
-          </Text>
+          <View className="flex-row items-center gap-2">
+            <View className={`px-2 py-1 rounded-full ${item.role === "admin" ? "bg-red-100" : item.role === "teacher" ? "bg-blue-100" : "bg-green-100"}`}>
+              <Text className={`text-xs font-medium ${item.role === "admin" ? "text-red-700" : item.role === "teacher" ? "text-blue-700" : "text-green-700"}`}>
+                {item.role}
+              </Text>
+            </View>
+            <View className={`px-2 py-1 rounded-full ${item.isActive ? "bg-green-100" : "bg-gray-100"}`}>
+              <Text className={`text-xs font-medium ${item.isActive ? "text-green-700" : "text-gray-700"}`}>
+                {item.isActive ? "Active" : "Inactive"}
+              </Text>
+            </View>
+          </View>
         </View>
       ))}
 
@@ -154,7 +166,7 @@ export default function HomeScreen() {
           <Text className="text-white font-medium text-sm">Jotai</Text>
         </View>
         <View className="bg-blue-500 px-3 py-2 rounded-full">
-          <Text className="text-white font-medium text-sm">Working!</Text>
+          <Text className="text-white font-medium text-sm">Backend API</Text>
         </View>
       </View>
     </ScrollView>

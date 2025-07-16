@@ -1,4 +1,4 @@
-import db, { client } from "@backend/db";
+import db, { client, connectPromise } from "@backend/db";
 import { assignments, classEnrollments, classes, submissions, users } from "@backend/db/schema";
 import { getNodeEnv } from "@backend/libs/config";
 import logger from "@backend/libs/logger";
@@ -9,9 +9,7 @@ beforeAll(async () => {
     throw new Error("Tests must be run with NODE_ENV=test");
   }
 
-  // Connect to the database
-  await client.connect();
-  logger.info("Connected to test database");
+  await connectPromise;
 });
 
 beforeEach(async () => {
