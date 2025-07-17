@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Post } from "@/types/post";
 
-import { CommentSection } from "@/components/comment-section";
+import { CommentSection } from "@/app/demo/classes/-components/comment-section";
 import { mockPostService } from "@/services/mock-post-service";
 
 export default function PostDetailScreen() {

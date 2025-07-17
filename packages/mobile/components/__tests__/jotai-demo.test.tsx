@@ -7,7 +7,7 @@ import {
   useSetAtom,
 } from "@/store";
 
-import { JotaiDemo } from "../jotai-demo";
+import { JotaiDemo } from "../../app/(drawer)/demo/-components/jotai-demo";
 
 // Mock the store imports
 jest.mock("@/store", () => ({

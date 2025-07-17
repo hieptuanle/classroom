@@ -6,9 +6,6 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native"
 
 import type { Class, ClassFilter } from "@/types/class";
 
-import { ClassCard } from "@/components/class-card";
-import { ClassCreateModal } from "@/components/class-create-modal";
-import { JoinClassModal } from "@/components/join-class-modal";
 import { mockClassService } from "@/services/mock-class-service";
 import {
   classFilterAtom,
@@ -16,6 +13,10 @@ import {
   joinClassModalAtom,
   userRoleAtom,
 } from "@/store/class-atoms";
+
+import { ClassCard } from "./-components/class-card";
+import { ClassCreateModal } from "./-components/class-create-modal";
+import { JoinClassModal } from "./-components/join-class-modal";
 
 const filterTabs: { key: ClassFilter; label: string }[] = [
   { key: "teaching", label: "Teaching" },

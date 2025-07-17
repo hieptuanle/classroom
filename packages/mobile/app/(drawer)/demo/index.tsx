@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { JotaiDemo } from "@/components/jotai-demo";
+import { JotaiDemo } from "@/app/(drawer)/demo/-components/jotai-demo";
 import { userApi } from "@/services/api-service";
 import { showWelcomeAtom, useAtomValue } from "@/store";
 

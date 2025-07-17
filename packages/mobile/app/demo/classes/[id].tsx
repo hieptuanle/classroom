@@ -4,7 +4,7 @@ import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { StreamTab } from "@/components/stream-tab";
+import { StreamTab } from "./-components/stream-tab";
 
 export default function ClassDetailScreen() {
   const insets = useSafeAreaInsets();

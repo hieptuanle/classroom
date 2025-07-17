@@ -6,11 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Post, PostFilter } from "@/types/post";
 
-import { CreatePostModal } from "@/components/create-post-modal";
-import { PostCard } from "@/components/post-card";
 import { mockPostService } from "@/services/mock-post-service";
 import { userRoleAtom } from "@/store/class-atoms";
 import { createPostModalAtom, postFilterAtom } from "@/store/post-atoms";
+
+import { CreatePostModal } from "./create-post-modal";
+import { PostCard } from "./post-card";
 
 const filterTabs: { key: PostFilter; label: string; icon: string }[] = [
   { key: "all", label: "All", icon: "list-outline" },
