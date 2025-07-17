@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useCallback, useState } from "react";
-import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Post, PostFilter } from "@/types/post";
@@ -27,7 +27,7 @@ export function StreamTab({ classId }: StreamTabProps) {
   const insets = useSafeAreaInsets();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const [isCreating, setIsCreating] = useState(false);
@@ -43,8 +43,6 @@ export function StreamTab({ classId }: StreamTabProps) {
       return;
 
     setIsLoading(!refresh);
-    if (refresh)
-      setIsRefreshing(true);
 
     try {
       const currentPage = refresh ? 0 : page;
@@ -54,13 +52,6 @@ export function StreamTab({ classId }: StreamTabProps) {
         limit: 10,
       });
 
-      if (refresh) {
-        setPosts(response.posts);
-      }
-      else {
-        setPosts(prev => [...prev, ...response.posts]);
-      }
-
       setHasMore(response.hasMore);
       setPage(currentPage + 1);
     }
@@ -69,8 +60,6 @@ export function StreamTab({ classId }: StreamTabProps) {
     }
     finally {
       setIsLoading(false);
-      if (refresh)
-        setIsRefreshing(false);
     }
   }, [filter, classId, hasMore, page]);
 
@@ -81,10 +70,6 @@ export function StreamTab({ classId }: StreamTabProps) {
     setHasMore(true);
     loadPosts(true);
   }, [filter, classId, loadPosts]);
-
-  const handleRefresh = () => {
-    loadPosts(true);
-  };
 
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {
@@ -193,7 +178,7 @@ export function StreamTab({ classId }: StreamTabProps) {
   };
 
   const renderLoadingFooter = () => {
-    if (!isLoading || isRefreshing)
+    if (!isLoading)
       return null;
 
     return (
@@ -256,9 +241,6 @@ export function StreamTab({ classId }: StreamTabProps) {
             />
           </View>
         )}
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.3}
         ListEmptyComponent={!isLoading ? renderEmptyState() : null}

@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useCallback, useState } from "react";
 import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Class, ClassFilter } from "@/types/class";
 
@@ -26,7 +25,6 @@ const filterTabs: { key: ClassFilter; label: string }[] = [
 
 export default function ClassesScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [classes, setClasses] = useState<Class[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -68,7 +66,7 @@ export default function ClassesScreen() {
   };
 
   const handleClassPress = (classData: Class) => {
-    router.push(`/classes/${classData.id}`);
+    router.push(`/demo/classes/${classData.id}`);
   };
 
   const handleCreateClass = async (formData: any) => {
@@ -156,7 +154,7 @@ export default function ClassesScreen() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="bg-white border-b border-gray-200 px-6 py-4" style={{ paddingTop: insets.top + 16 }}>
+      <View className="bg-white border-b border-gray-200 px-6 py-4">
         <View className="flex-row justify-between items-center">
           <Text className="text-3xl font-bold text-gray-900">Classes</Text>
 

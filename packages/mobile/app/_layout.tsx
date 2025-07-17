@@ -60,7 +60,7 @@ function RootLayoutNav() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal" }} />
             <Stack.Screen
               name="login"
@@ -74,6 +74,20 @@ function RootLayoutNav() {
               options={{
                 headerShown: false,
                 presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="class/[id]"
+              options={{
+                headerShown: false,
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="demo/classes/[id]"
+              options={{
+                headerShown: false,
+                presentation: "card",
               }}
             />
           </Stack>

@@ -35,7 +35,7 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color }) => <IoniconsTabBarIcon name="home" color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/demo/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -59,7 +59,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="todo"
         options={{
           title: "To-Do",
           tabBarIcon: ({ color }) => <IoniconsTabBarIcon name="checkmark-circle" color={color} />,
