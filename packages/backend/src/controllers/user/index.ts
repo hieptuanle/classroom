@@ -6,9 +6,9 @@ import { eq } from "drizzle-orm";
 import db from "@backend/db";
 import { users } from "@backend/db/schema";
 import {
-    comparePassword,
-    findUserById,
-    searchUsers as searchUsersUtil,
+  comparePassword,
+  findUserById,
+  searchUsers as searchUsersUtil,
 } from "@backend/db/utils";
 import { processAndSaveAvatar } from "@backend/middleware/upload";
 
