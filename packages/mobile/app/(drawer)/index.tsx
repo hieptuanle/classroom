@@ -38,49 +38,49 @@ export default function ClassListScreen() {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white dark:bg-black">
       <ScrollView className="p-4">
         {/* Classes you teach */}
-        <Text className="text-xl font-bold mt-5 mb-2 text-gray-800">Lớp bạn dạy</Text>
+        <Text className="text-xl font-bold mt-5 mb-2 text-gray-800 dark:text-white">Lớp bạn dạy</Text>
         {teachClass.map(item => (
           <TouchableOpacity
             key={item.id}
-            className="bg-blue-50 p-4 rounded-lg mb-3"
+            className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg mb-3"
             onPress={() => handlePress(item)}
           >
             <View className="flex-row justify-between items-center">
               <View className="flex-1">
-                <Text className="text-lg font-semibold text-black uppercase">{item.name}</Text>
-                <Text className="text-blue-600 mt-1 mb-1 font-medium">{item.part}</Text>
-                <Text className="text-gray-600 text-sm">
+                <Text className="text-lg font-semibold text-black dark:text-white uppercase">{item.name}</Text>
+                <Text className="text-blue-600 dark:text-blue-400 mt-1 mb-1 font-medium">{item.part}</Text>
+                <Text className="text-gray-600 dark:text-gray-300 text-sm">
                   {item.memberCount}
                   {" "}
                   học viên
                 </Text>
               </View>
               <Pressable onPress={() => setModalVisible(true)} className="p-2">
-                <Text className="text-2xl text-gray-500">⋮</Text>
+                <Text className="text-2xl text-gray-500 dark:text-gray-400">⋮</Text>
               </Pressable>
             </View>
           </TouchableOpacity>
         ))}
 
         {/* Classes you joined */}
-        <Text className="text-xl font-bold mt-5 mb-2 text-gray-800">Lớp bạn tham gia</Text>
+        <Text className="text-xl font-bold mt-5 mb-2 text-gray-800 dark:text-white">Lớp bạn tham gia</Text>
         {joinClass.map(item => (
           <TouchableOpacity
             key={item.id}
-            className="bg-blue-50 p-4 rounded-lg mb-3"
+            className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg mb-3"
             onPress={() => handlePress(item)}
           >
             <View className="flex-row justify-between items-center">
               <View className="flex-1">
-                <Text className="text-lg font-semibold text-black uppercase">{item.name}</Text>
-                <Text className="text-blue-600 mt-1 mb-1 font-medium">{item.part}</Text>
-                <Text className="text-gray-600 text-sm">{item.teacher}</Text>
+                <Text className="text-lg font-semibold text-black dark:text-white uppercase">{item.name}</Text>
+                <Text className="text-blue-600 dark:text-blue-400 mt-1 mb-1 font-medium">{item.part}</Text>
+                <Text className="text-gray-600 dark:text-gray-300 text-sm">{item.teacher}</Text>
               </View>
               <Pressable onPress={() => setModalVisible(true)} className="p-2">
-                <Text className="text-2xl text-gray-500">⋮</Text>
+                <Text className="text-2xl text-gray-500 dark:text-gray-400">⋮</Text>
               </Pressable>
             </View>
           </TouchableOpacity>
@@ -94,10 +94,10 @@ export default function ClassListScreen() {
           onRequestClose={() => setModalVisible(false)}
         >
           <View className="flex-1 bg-black/30 justify-center items-center">
-            <View className="bg-white p-6 rounded-lg min-w-[200px]">
-              <Text className="text-lg mb-4">Tùy chọn lớp học</Text>
+            <View className="bg-white dark:bg-gray-800 p-6 rounded-lg min-w-[200px]">
+              <Text className="text-lg mb-4 text-black dark:text-white">Tùy chọn lớp học</Text>
               <Pressable onPress={() => setModalVisible(false)}>
-                <Text className="text-blue-600 text-base">Đóng</Text>
+                <Text className="text-base text-blue-600 dark:text-blue-400">Đóng</Text>
               </Pressable>
             </View>
           </View>
@@ -106,7 +106,7 @@ export default function ClassListScreen() {
 
       {/* Floating Action Button */}
       <Pressable
-        className="absolute right-6 bottom-8 bg-blue-600 rounded-full w-14 h-14 flex-row items-center justify-center shadow-lg"
+        className="absolute right-6 bottom-8 bg-blue-600 dark:bg-blue-500 rounded-full w-14 h-14 flex-row items-center justify-center shadow-lg"
         onPress={() => setFloatingModalVisible(true)}
       >
         <Text className="text-white text-3xl">+</Text>
@@ -120,10 +120,10 @@ export default function ClassListScreen() {
         onRequestClose={() => setFloatingModalVisible(false)}
       >
         <View className="flex-1 bg-black/30 justify-center items-center">
-          <View className="bg-white p-6 rounded-lg min-w-[200px]">
-            <Text className="text-lg mb-4">Thêm lớp học mới</Text>
+          <View className="bg-white dark:bg-gray-800 p-6 rounded-lg min-w-[200px]">
+            <Text className="text-lg mb-4 text-black dark:text-white">Thêm lớp học mới</Text>
             <Pressable onPress={() => setFloatingModalVisible(false)}>
-              <Text className="text-blue-600 text-base">Đóng</Text>
+              <Text className="text-base text-blue-600 dark:text-blue-400">Đóng</Text>
             </Pressable>
           </View>
         </View>
