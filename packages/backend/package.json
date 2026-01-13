@@ -39,6 +39,7 @@
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "config": "^4.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
+    "@types/cookie-parser": "^1.4.9",
     "@types/node": "^24.0.12",
     "@types/pg": "^8.15.4",
     "@types/supertest": "^6.0.3",
